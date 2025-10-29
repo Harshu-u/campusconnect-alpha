@@ -1,0 +1,106 @@
+{% extends "core/base.html" %}
+
+{% block title %}Timetable{% endblock %}
+
+{% block page_title %}Timetable{% endblock %}
+
+{% block content %}
+
+<div class="bg-card p-4 rounded-lg shadow-sm mb-6">
+  <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="flex flex-wrap gap-2">
+      <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+        <option value="">Select Department</option>
+        <option value="cs">Computer Science</option>
+        <option value="eng">Engineering</option>
+        </select>
+      <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+        <option value="">Select Year</option>
+        <option value="1">Year 1</option>
+        <option value="2">Year 2</option>
+        <option value="3">Year 3</option>
+        <option value="4">Year 4</option>
+      </select>
+       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+        <option value="">Select Semester</option>
+        <option value="1">Sem 1</option>
+        <option value="2">Sem 2</option>
+        </select>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
+        <i data-lucide="plus" class="w-4 h-4"></i> Add Timetable Entry
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bg-card rounded-lg shadow-sm overflow-hidden">
+  <div class="p-4 border-b border-border">
+    <h3 class="text-lg font-semibold text-foreground">Weekly Timetable</h3>
+    <p class="text-sm text-muted-foreground">Department: Computer Science, Year: 1, Semester: 1</p> </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-px bg-border"> 
+    {% for day in days_of_week %}
+      <div class="bg-muted p-3 font-medium text-center text-sm text-muted-foreground">{{ day }}</div>
+    {% endfor %}
+
+    <div class="bg-card p-3 space-y-2 min-h-[100px]">
+      <div class="bg-blue-50 border border-blue-200 p-2 rounded-md text-xs">
+        <p class="font-semibold text-blue-800">09:00 - 10:00</p>
+        <p class="text-blue-700">CS101 - Intro to Programming</p>
+        <p class="text-blue-600 text-[10px]">Room: A101, Faculty: Dr. Turing</p>
+      </div>
+       <div class="bg-green-50 border border-green-200 p-2 rounded-md text-xs">
+        <p class="font-semibold text-green-800">11:00 - 12:00</p>
+        <p class="text-green-700">MA101 - Calculus I</p>
+        <p class="text-green-600 text-[10px]">Room: B203, Faculty: Dr. Newton</p>
+      </div>
+    </div>
+    <div class="bg-card p-3 space-y-2 min-h-[100px]">
+       <div class="bg-yellow-50 border border-yellow-200 p-2 rounded-md text-xs">
+        <p class="font-semibold text-yellow-800">10:00 - 11:00</p>
+        <p class="text-yellow-700">PH101 - Physics I</p>
+        <p class="text-yellow-600 text-[10px]">Room: C105, Faculty: Dr. Einstein</p>
+      </div>
+    </div>
+    <div class="bg-card p-3 space-y-2 min-h-[100px]">
+       <div class="bg-blue-50 border border-blue-200 p-2 rounded-md text-xs">
+        <p class="font-semibold text-blue-800">09:00 - 10:00</p>
+        <p class="text-blue-700">CS101 - Intro to Programming</p>
+        <p class="text-blue-600 text-[10px]">Room: A101, Faculty: Dr. Turing</p>
+      </div>
+    </div>
+    <div class="bg-card p-3 space-y-2 min-h-[100px]">
+       <div class="bg-green-50 border border-green-200 p-2 rounded-md text-xs">
+        <p class="font-semibold text-green-800">11:00 - 12:00</p>
+        <p class="text-green-700">MA101 - Calculus I</p>
+        <p class="text-green-600 text-[10px]">Room: B203, Faculty: Dr. Newton</p>
+      </div>
+    </div>
+    <div class="bg-card p-3 space-y-2 min-h-[100px]">
+        <div class="bg-yellow-50 border border-yellow-200 p-2 rounded-md text-xs">
+        <p class="font-semibold text-yellow-800">10:00 - 11:00</p>
+        <p class="text-yellow-700">PH101 - Physics I</p>
+        <p class="text-yellow-600 text-[10px]">Room: C105, Faculty: Dr. Einstein</p>
+      </div>
+        <div class="bg-purple-50 border border-purple-200 p-2 rounded-md text-xs">
+        <p class="font-semibold text-purple-800">14:00 - 16:00</p>
+        <p class="text-purple-700">CS1L1 - Programming Lab</p>
+        <p class="text-purple-600 text-[10px]">Room: Lab 1, Faculty: Dr. Turing</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_context %}
+{# This provides the list of days for the table header loop #}
+<script>
+  window.djangoContext = {
+    days_of_week: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] 
+    // Assuming 5-day week for now, adjust if needed
+  };
+</script>
+{% endblock %}

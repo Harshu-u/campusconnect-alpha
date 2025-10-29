@@ -1,0 +1,276 @@
+{# We don't extend base.html because the login page shouldn't have the sidebar #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - College Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: ["class"],
+        theme: {
+          extend: {
+            borderRadius: {
+              lg: "var(--radius)",
+              md: "calc(var(--radius) - 2px)",
+              sm: "calc(var(--radius) - 4px)",
+            },
+            colors: {
+              background: "var(--background)",
+              foreground: "var(--foreground)",
+              card: {
+                DEFAULT: "var(--card)",
+                foreground: "var(--card-foreground)",
+              },
+              popover: {
+                DEFAULT: "var(--popover)",
+                foreground: "var(--popover-foreground)",
+              },
+              primary: {
+                DEFAULT: "var(--primary)",
+                foreground: "var(--primary-foreground)",
+              },
+              secondary: {
+                DEFAULT: "var(--secondary)",
+                foreground: "var(--secondary-foreground)",
+              },
+              muted: {
+                DEFAULT: "var(--muted)",
+                foreground: "var(--muted-foreground)",
+              },
+              accent: {
+                DEFAULT: "var(--accent)",
+                foreground: "var(--accent-foreground)",
+              },
+              destructive: {
+                DEFAULT: "var(--destructive)",
+                foreground: "var(--destructive-foreground)",
+              },
+              border: "var(--border)",
+              input: "var(--input)",
+              ring: "var(--ring)",
+              chart: {
+                1: "var(--chart-1)",
+                2: "var(--chart-2)",
+                3: "var(--chart-3)",
+                "4.": "var(--chart-4)",
+                5: "var(--chart-5)",
+              },
+              sidebar: {
+                DEFAULT: "var(--sidebar-background)",
+                foreground: "var(--sidebar-foreground)",
+                primary: "var(--sidebar-primary)",
+                "primary-foreground": "var(--sidebar-primary-foreground)",
+                accent: "var(--sidebar-accent)",
+                "accent-foreground": "var(--sidebar-accent-foreground)",
+                border: "var(--sidebar-border)",
+                ring: "var(--sidebar-ring)",
+              },
+            },
+            fontFamily: {
+              sans: ["var(--font-sans)"],
+              serif: ["var(--font-serif)"],
+              mono: ["var(--font-mono)"],
+            },
+            keyframes: {
+              "accordion-down": {
+                from: { height: "0" },
+                to: { height: "var(--radix-accordion-content-height)" },
+              },
+              "accordion-up": {
+                from: { height: "var(--radix-accordion-content-height)" },
+                to: { height: "0" },
+              },
+            },
+            animation: {
+              "accordion-down": "accordion-down 0.2s ease-out",
+              "accordion-up": "accordion-up 0.2s ease-out",
+            },
+          },
+        },
+      }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style type="text/css">
+      :root {
+        --background: hsl(210, 40%, 98%);
+        --foreground: hsl(222, 84%, 5%);
+        --card: hsl(0, 0%, 100%);
+        --card-foreground: hsl(222, 84%, 5%);
+        --popover: hsl(0, 0%, 100%);
+        --popover-foreground: hsl(222, 84%, 5%);
+        --primary: hsl(210, 100%, 50%);
+        --primary-foreground: hsl(210, 40%, 98%);
+        --secondary: hsl(186, 100%, 38%);
+        --secondary-foreground: hsl(210, 40%, 98%);
+        --muted: hsl(210, 40%, 96%);
+        --muted-foreground: hsl(215, 16%, 47%);
+        --accent: hsl(36, 100%, 50%);
+        --accent-foreground: hsl(222, 84%, 5%);
+        --destructive: hsl(0, 84%, 60%);
+        --destructive-foreground: hsl(210, 40%, 98%);
+        --border: hsl(214, 32%, 91%);
+        --input: hsl(214, 32%, 91%);
+        --ring: hsl(210, 100%, 50%);
+        --chart-1: hsl(210, 100%, 50%);
+        --chart-2: hsl(186, 100%, 38%);
+        --chart-3: hsl(36, 100%, 50%);
+        --chart-4: hsl(142, 76%, 36%);
+        --chart-5: hsl(350, 89%, 60%);
+        --sidebar: hsl(180, 6.6667%, 97.0588%);
+        --sidebar-foreground: hsl(210, 25%, 7.8431%);
+        --sidebar-primary: hsl(203.8863, 88.2845%, 53.1373%);
+        --sidebar-primary-foreground: hsl(0, 0%, 100%);
+        --sidebar-accent: hsl(211.5789, 51.3514%, 92.7451%);
+        --sidebar-accent-foreground: hsl(203.8863, 88.2845%, 53.1373%);
+        --sidebar-border: hsl(205, 25%, 90.5882%);
+        --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
+        --font-sans: "Inter", "system-ui", sans-serif;
+        --font-serif: Georgia, serif;
+        --font-mono: Menlo, monospace;
+        --radius: 8px;
+        --shadow-2xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --shadow-xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --shadow-sm: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
+          0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --shadow: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
+          0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --shadow-md: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
+          0px 2px 4px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --shadow-lg: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
+          0px 4px 6px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --shadow-xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
+          0px 8px 10px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --shadow-2xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+        --tracking-normal: 0em;
+        --spacing: 0.25rem;
+      }
+      .dark {
+        --background: hsl(0, 0%, 0%);
+        --foreground: hsl(200, 6.6667%, 91.1765%);
+        --card: hsl(228, 9.8039%, 10%);
+        --card-foreground: hsl(0, 0%, 85.098%);
+        --popover: hsl(0, 0%, 0%);
+        --popover-foreground: hsl(200, 6.6667%, 91.1765%);
+        --primary: hsl(203.7736, 87.6033%, 52.549%);
+        --primary-foreground: hsl(0, 0%, 100%);
+        --secondary: hsl(195, 15.3846%, 94.902%);
+        --secondary-foreground: hsl(210, 25%, 7.8431%);
+        --muted: hsl(0, 0%, 9.4118%);
+        --muted-foreground: hsl(210, 3.3898%, 46.2745%);
+        --accent: hsl(205.7143, 70%, 7.8431%);
+        --accent-foreground: hsl(203.7736, 87.6033%, 52.549%);
+        --destructive: hsl(356.3033, 90.5579%, 54.3137%);
+        --destructive-foreground: hsl(0, 0%, 100%);
+        --border: hsl(210, 5.2632%, 14.902%);
+        --input: hsl(207.6923, 27.6596%, 18.4314%);
+        --ring: hsl(202.8169, 89.1213%, 53.1373%);
+        --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
+        --chart-2: hsl(159.7826, 100%, 36.0784%);
+        --chart-3: hsl(42.029, 92.8251%, 56.2745%);
+        --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
+        --chart-5: hsl(341.4894, 75.2%, 50.9804%);
+        --sidebar: hsl(228, 9.8039%, 10%);
+        --sidebar-foreground: hsl(0, 0%, 85.098%);
+        --sidebar-primary: hsl(202.8169, 89.1213%, 53.1373%);
+        --sidebar-primary-foreground: hsl(0, 0%, 100%);
+        --sidebar-accent: hsl(205.7143, 70%, 7.8431%);
+        --sidebar-accent-foreground: hsl(203.7736, 87.6033%, 52.549%);
+        --sidebar-border: hsl(205.7143, 15.7895%, 26.0784%);
+        --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
+      }
+      body {
+        font-family: var(--font-sans), system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .sidebar-active {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+      }
+    </style>
+</head>
+<body class="bg-background text-foreground flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-md bg-card p-8 rounded-lg shadow-md border border-border">
+        <div class="text-center mb-8">
+             <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-xl mx-auto mb-4">
+                CMS
+             </div>
+            <h1 class="text-2xl font-bold text-foreground">Login to Your Account</h1>
+            <p class="text-muted-foreground text-sm mt-1">College Management System</p>
+        </div>
+
+        {# Display errors if login fails #}
+        {% if form.errors %}
+            <div class="bg-destructive/10 border border-destructive text-destructive p-3 rounded-md mb-6 text-sm">
+                Your username and password didn't match. Please try again.
+            </div>
+        {% endif %}
+
+        {# Display message if user just logged out #}
+        {% if next %}
+            {% if user.is_authenticated %}
+            <div class="bg-muted border border-border text-muted-foreground p-3 rounded-md mb-6 text-sm">
+                Your account doesn't have access to this page. To proceed,
+                please login with an account that has access.
+            </div>
+            {% else %}
+             <div class="bg-muted border border-border text-muted-foreground p-3 rounded-md mb-6 text-sm">
+                Please login to see this page.
+             </div>
+            {% endif %}
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %} {# IMPORTANT security tag #}
+            
+            <div class="space-y-4">
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-foreground mb-1">Username</label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        autofocus autocapitalize="none" 
+                        autocomplete="username" 
+                        maxlength="150" 
+                        required 
+                        id="id_username"
+                        class="w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                </div>
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-foreground mb-1">Password</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        autocomplete="current-password" 
+                        required 
+                        id="id_password"
+                        class="w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                    {# Link for password reset (optional) #}
+                    {# <a href="{% url 'password_reset' %}" class="text-xs text-primary hover:underline mt-1 block text-right">Forgot password?</a> #}
+                </div>
+            </div>
+
+            <button 
+                type="submit" 
+                class="btn-primary w-full px-4 py-2 rounded-md text-sm font-medium mt-6"
+            >
+                Login
+            </button>
+             <input type="hidden" name="next" value="{{ next }}">
+        </form>
+        {# Link to Sign up (if applicable) #}
+        {# <p class="text-center text-sm text-muted-foreground mt-6">
+            Don't have an account? <a href="#" class="text-primary hover:underline">Sign up</a>
+        </p> #}
+    </div>
+
+</body>
+</html>

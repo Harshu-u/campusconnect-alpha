@@ -1,0 +1,185 @@
+{% extends "core/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  
+  <div class="stat-card bg-card p-6 rounded-lg shadow-sm" data-testid="stat-students">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-muted-foreground text-sm font-medium">Total Students</p>
+        <p class="text-2xl font-bold text-foreground" data-testid="stat-students-value">
+          1,250
+        </p>
+        <p class="text-xs text-green-500">+5.2% from last month</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-blue-100">
+        <i data-lucide="graduation-cap" class="w-6 h-6 text-blue-600"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-card bg-card p-6 rounded-lg shadow-sm" data-testid="stat-faculty">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-muted-foreground text-sm font-medium">Total Faculty</p>
+        <p class="text-2xl font-bold text-foreground" data-testid="stat-faculty-value">
+          150
+        </p>
+        <p class="text-xs text-green-500">+2.1% from last month</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-green-100">
+        <i data-lucide="users" class="w-6 h-6 text-green-600"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-card bg-card p-6 rounded-lg shadow-sm" data-testid="stat-courses">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-muted-foreground text-sm font-medium">Total Courses</p>
+        <p class="text-2xl font-bold text-foreground" data-testid="stat-courses-value">
+          80
+        </p>
+        <p class="text-xs text-green-500">+10 new this semester</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-yellow-100">
+        <i data-lucide="book-open" class="w-6 h-6 text-yellow-600"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-card bg-card p-6 rounded-lg shadow-sm" data-testid="stat-attendance">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-muted-foreground text-sm font-medium">Attendance Rate</p>
+        <p class="text-2xl font-bold text-foreground" data-testid="stat-attendance-value">
+          92.5%
+        </p>
+        <p class="text-xs text-green-500">+1.5% from last week</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-indigo-100">
+        <i data-lucide="trending-up" class="w-6 h-6 text-indigo-600"></i>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+  <div class="lg:col-span-2">
+    <div class="bg-card p-6 rounded-lg shadow-sm" data-testid="attendance-chart">
+      <h3 class="text-lg font-semibold text-foreground">Attendance Trends</h3>
+      <div class="h-64 mt-4">
+        <canvas id="attendanceChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="lg:col-span-1">
+    <div class="bg-card p-6 rounded-lg shadow-sm" data-testid="upcoming-events">
+      <h3 class="text-lg font-semibold text-foreground">Upcoming Events</h3>
+      <div class="space-y-4 mt-4">
+        <div class="flex items-start space-x-3">
+          <div class="w-12 h-12 bg-muted rounded-lg flex flex-col items-center justify-center text-xs">
+            <span class="font-bold text-foreground">15</span>
+            <span class="text-muted-foreground">Dec</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-foreground">Midterm Exams Begin</p>
+            <p class="text-xs text-muted-foreground">All departments</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="w-12 h-12 bg-muted rounded-lg flex flex-col items-center justify-center text-xs">
+            <span class="font-bold text-foreground">20</span>
+            <span class="text-muted-foreground">Dec</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-foreground">Faculty Meeting</p>
+            <p class="text-xs text-muted-foreground">Conference Room A - 2:00 PM</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="w-12 h-12 bg-muted rounded-lg flex flex-col items-center justify-center text-xs">
+            <span class="font-bold text-foreground">25</span>
+            <span class="text-muted-foreground">Dec</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-foreground">Winter Break Begins</p>
+            <p class="text-xs text-muted-foreground">Campus closes for holidays</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lg:col-span-3">
+    <div class="bg-card p-6 rounded-lg shadow-sm" data-testid="enrollment-chart">
+      <h3 class="text-lg font-semibold text-foreground">Student Enrollment by Department</h3>
+      <div class="h-72 mt-4">
+        <canvas id="enrollmentChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    Chart.register(...Chart.registerables);
+    const attendanceCtx = document.getElementById("attendanceChart");
+    if (attendanceCtx) {
+      new Chart(attendanceCtx.getContext("2d"), {
+        type: "line",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          datasets: [{
+            label: "Attendance %",
+            data: [92, 89, 94, 88, 91, 85, 87],
+            borderColor: "hsl(210, 100%, 50%)",
+            backgroundColor: "hsla(210, 100%, 50%, 0.1)",
+            tension: 0.4,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 100 } },
+        },
+      });
+    }
+    const enrollmentCtx = document.getElementById("enrollmentChart");
+    if (enrollmentCtx) {
+      new Chart(enrollmentCtx.getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: ["Computer Science", "Engineering", "Business", "Arts", "Science"],
+          datasets: [{
+            data: [35, 25, 20, 12, 8],
+            backgroundColor: [
+              "hsl(210, 100%, 50%)",
+              "hsl(186, 100%, 38%)",
+              "hsl(36, 100%, 50%)",
+              "hsl(142, 76%, 36%)",
+              "hsl(350, 89%, 60%)",
+            ],
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: "bottom" } },
+        },
+      });
+    }
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "core/base.html" %}
+
+{% block title %}Examinations{% endblock %}
+
+{% block page_title %}Examinations{% endblock %}
+
+{% block content %}
+
+<div class="bg-card p-4 rounded-lg shadow-sm mb-6">
+  <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="flex flex-wrap gap-2">
+      <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+        <option value="">Select Course</option>
+        <option value="cs101">CS101 - Intro to Programming</option>
+        <option value="ma101">MA101 - Calculus I</option>
+        </select>
+       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+        <option value="">Select Exam Type</option>
+        <option value="midterm">Midterm</option>
+        <option value="final">Final</option>
+        <option value="quiz">Quiz</option>
+        <option value="assignment">Assignment</option>
+        </select>
+       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+        <option value="">Select Year</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        </select>
+       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+        <option value="">Select Semester</option>
+        <option value="1">Sem 1</option>
+        <option value="2">Sem 2</option>
+        </select>
+    </div>
+    <div class="flex gap-2">
+       <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
+        <i data-lucide="file-plus" class="w-4 h-4"></i> Add Result
+      </button>
+      <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
+        <i data-lucide="plus" class="w-4 h-4"></i> Schedule Exam
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bg-card rounded-lg shadow-sm overflow-hidden">
+    <div class="border-b border-border">
+        <div class="flex space-x-1 px-4 pt-2">
+            {# Basic tab structure - need JS or a library like HTMX to make tabs work #}
+            <button class="px-3 py-2 border-b-2 border-primary text-primary font-medium text-sm">Examinations</button>
+            <button class="px-3 py-2 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm">Results</button>
+        </div>
+    </div>
+
+    {# Examinations Tab Content #}
+    <div class="overflow-x-auto">
+        <table class="w-full min-w-max text-sm text-left">
+            <thead class="bg-muted">
+                <tr>
+                    <th class="p-4 font-medium text-muted-foreground">Exam Name</th>
+                    <th class="p-4 font-medium text-muted-foreground">Course</th>
+                    <th class="p-4 font-medium text-muted-foreground">Type</th>
+                    <th class="p-4 font-medium text-muted-foreground">Date</th>
+                    <th class="p-4 font-medium text-muted-foreground">Time</th>
+                    <th class="p-4 font-medium text-muted-foreground">Max Marks</th>
+                    <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+                <tr class="table-row">
+                    <td class="p-4 font-medium text-foreground">Midterm 1</td>
+                    <td class="p-4 text-muted-foreground">CS101 - Intro to Programming</td>
+                    <td class="p-4 text-muted-foreground"><span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">Midterm</span></td>
+                    <td class="p-4 text-muted-foreground">2025-11-15</td>
+                    <td class="p-4 text-muted-foreground">09:00 - 11:00</td>
+                    <td class="p-4 text-muted-foreground">100</td>
+                    <td class="p-4 flex justify-end gap-2">
+                        <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button class="p-2 rounded-md hover:bg-muted text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+                 <tr class="table-row">
+                    <td class="p-4 font-medium text-foreground">Final Exam</td>
+                    <td class="p-4 text-muted-foreground">MA101 - Calculus I</td>
+                    <td class="p-4 text-muted-foreground"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Final</span></td>
+                    <td class="p-4 text-muted-foreground">2025-12-20</td>
+                    <td class="p-4 text-muted-foreground">13:00 - 16:00</td>
+                    <td class="p-4 text-muted-foreground">150</td>
+                     <td class="p-4 flex justify-end gap-2">
+                        <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button class="p-2 rounded-md hover:bg-muted text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    {# Results Tab Content (Initially hidden - needs JS/HTMX) #}
+    {# 
+    <div class="overflow-x-auto hidden"> 
+        <table class="w-full min-w-max text-sm text-left">
+             <thead class="bg-muted">
+                <tr>
+                    <th class="p-4 font-medium text-muted-foreground">Student ID</th>
+                    <th class="p-4 font-medium text-muted-foreground">Student Name</th>
+                    <th class="p-4 font-medium text-muted-foreground">Exam Name</th>
+                    <th class="p-4 font-medium text-muted-foreground">Course</th>
+                    <th class="p-4 font-medium text-muted-foreground">Marks Obtained</th>
+                    <th class="p-4 font-medium text-muted-foreground">Grade</th>
+                    <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                </tr>
+            </thead>
+             <tbody class="divide-y divide-border">
+                <tr class="table-row">
+                     <td class="p-4 text-muted-foreground">S12345</td>
+                     <td class="p-4 font-medium text-foreground">Jane Doe</td>
+                    <td class="p-4 text-muted-foreground">Midterm 1</td>
+                    <td class="p-4 text-muted-foreground">CS101</td>
+                    <td class="p-4 text-muted-foreground">85 / 100</td>
+                    <td class="p-4 text-muted-foreground">A</td>
+                     <td class="p-4 flex justify-end gap-2">
+                        <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+             </tbody>
+        </table>
+    </div> 
+    #}
+
+    <div class="p-4 border-t border-border flex items-center justify-between">
+        <p class="text-sm text-muted-foreground">Showing 1 to 2 of 2 results</p>
+        <div class="flex gap-2">
+            <button class="px-3 py-1 rounded-md border border-input text-sm font-medium hover:bg-muted" disabled>Previous</button>
+            <button class="px-3 py-1 rounded-md border border-input text-sm font-medium hover:bg-muted">Next</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -241,12 +241,7 @@
                 <div class="flex items-center space-x-2">
                     <!-- Login Button -->
                     <div>
-                        <!-- 
-                          DJANGO INTEGRATION: 
-                          Replace href="/login/" with Django's URL template tag.
-                          Example: href="{% url 'your_login_url_name' %}"
-                        -->
-                        <a href="/login/" 
+                        <a href="{% url 'login' %}" 
                            class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                             Login
                         </a>
@@ -271,19 +266,14 @@
             <div class="max-w-3xl mx-auto text-center">
                 <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground">
                     Welcome to 
-                    <span class="block text-primary xl:inline">Your Awesome Project</span>
+                    <span class="block text-primary xl:inline">Campus Connect</span>
                 </h1>
                 <p class="mt-6 text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto">
                     This is a sleek, modern landing page for your new application. 
                     Introduce your core value proposition here and get users excited.
                 </p>
                 <div class="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <!-- 
-                      DJANGO INTEGRATION: 
-                      Update this href just like the login button in the nav.
-                      Example: href="{% url 'your_login_url_name' %}"
-                    -->
-                    <a href="/login/" 
+                    <a href="{% url 'login' %}" 
                        class="inline-flex items-center justify-center px-8 py-3 text-base font-medium rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                         Get Started
                     </a>

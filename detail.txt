@@ -1,0 +1,50 @@
+Tech Stack
+
+Frontend: HTML, CSS, JavaScript (Bootstrap allowed for styling)
+
+Backend: Python Django
+
+Database: MySQL or postgre any which will be good
+
+Environment: The project should be runnable in Docker with Docker Compose (one container for Django backend, one for MySQL database).
+
+🔹 Core Features
+Academic Management
+
+it should have different types of accounts with different capabilities and features like below.
+
+Student Registration & Admission – Add, update, and manage student profiles.
+
+Faculty Management – Manage faculty details and link them to courses.
+
+Timetable Generation – Create and manage class schedules, prevent conflicts.
+
+Examination Management – Manage exam schedules and student results.
+
+Administrative Features
+
+Attendance Tracking – Faculty can mark attendance, students can view theirs.
+
+Fee Management – Just track payment status and send reminders (no payment gateway).
+
+Library Management – Issue/return books, track availability, fines.
+
+Hostel & Transport Management – Allocate rooms, manage bus routes, student assignments.
+
+Sports Gear Management – Track sports equipment borrowing/return like library.
+
+Report Generation – Attendance %, marks report, student list, etc.
+
+🔹 Requirements
+
+Use Django’s authentication system with three roles: Admin, Faculty, Student.
+
+Create Django apps like students, faculty, attendance, exams, library, hostel_transport, sports, and fees.
+
+Build clean HTML templates with forms, tables, and dashboards.
+
+Database should be normalized with proper relationships (e.g., Student ↔ Courses ↔ Faculty).
+
+Add basic reporting charts using Chart.js or similar.
+
+Everything should run locally with docker-compose up and be accessible in browser at http://localhost:8000/.

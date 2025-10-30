@@ -124,4 +124,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # At the very bottom of college_project/settings.py
 
 AUTH_USER_MODEL = 'core.User'
-LOGIN_REDIRECT_URL = '/'
+# LOGIN_REDIRECT_URL = '/' # Old
+LOGIN_REDIRECT_URL = '/dashboard/' # New - Redirect to dashboard after login
+# Optional: Add logout redirect URL if you want users sent somewhere specific after logout
+LOGOUT_REDIRECT_URL = '/' # Redirect to landing page after logout

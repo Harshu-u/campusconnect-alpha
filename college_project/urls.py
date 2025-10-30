@@ -4,6 +4,8 @@ from django.urls import path, include # Make sure 'include' is here
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
-    path('accounts/', include('django.contrib.auth.urls')), # <-- ADD THIS LINE
+    # Include your app's urls (now contains landing page at '' and dashboard at 'dashboard/')
+    path('', include('core.urls')), 
+    # Include Django's built-in auth URLs (handles login, logout, password reset etc.)
+    path('registration/', include('django.contrib.auth.urls')), # <-- This is important
 ]

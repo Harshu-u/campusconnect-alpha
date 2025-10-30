@@ -1,4 +1,3 @@
-<!-- @format -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>{% block title %}Dashboard{% endblock %} - College Management</title>
+    <title>{% block title %}Dashboard{% endblock %} - Campus Connect</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -208,9 +207,7 @@
               CMS
             </div>
             <div>
-              <h1 class="font-bold text-foreground">College Management</h1>
-
-              <p class="text-sm text-muted-foreground capitalize">
+              <h1 class="font-bold text-foreground">Campus Connect</h1> <p class="text-sm text-muted-foreground capitalize">
                 {% if user.is_authenticated %} {{ user.role|default:"User" }} {%
                 else %} Guest {% endif %}
               </p>
@@ -220,121 +217,186 @@
 
         <nav class="p-4 flex-1 overflow-y-auto">
           <ul class="space-y-2">
+            
             <li>
               <a
                 href="{% url 'dashboard' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors sidebar-active"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'dashboard' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
                 <span>Dashboard</span>
               </a>
             </li>
+
+            {% if user.role == 'admin' %}
             <li>
               <a
                 href="{% url 'students' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'students' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="graduation-cap" class="w-5 h-5"></i>
                 <span>Students</span>
               </a>
             </li>
+            {% endif %}
+
+            {% if user.role == 'admin' %}
             <li>
               <a
                 href="{% url 'faculty' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'faculty' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span>Faculty</span>
               </a>
             </li>
+            {% endif %}
+
+            {% if user.role == 'admin' or user.role == 'faculty' %}
             <li>
               <a
                 href="{% url 'courses' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'courses' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="book-open" class="w-5 h-5"></i>
                 <span>Courses</span>
               </a>
             </li>
+            {% endif %}
+
             <li>
               <a
                 href="{% url 'timetable' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'timetable' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 <span>Timetable</span>
               </a>
             </li>
+
             <li>
               <a
                 href="{% url 'attendance' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'attendance' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
                 <span>Attendance</span>
               </a>
             </li>
+
             <li>
               <a
                 href="{% url 'exams' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'exams' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="clipboard-check" class="w-5 h-5"></i>
                 <span>Examinations</span>
               </a>
             </li>
+
             <li>
               <a
                 href="{% url 'library' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'library' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="library" class="w-5 h-5"></i>
                 <span>Library</span>
               </a>
             </li>
+
+            {% if user.role == 'admin' or user.role == 'student' %}
             <li>
               <a
                 href="{% url 'fees' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'fees' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="dollar-sign" class="w-5 h-5"></i>
-                <span>Fee Management</span>
+                <span>
+                  {% if user.role == 'admin' %}Fee Management{% else %}My Fees{% endif %}
+                </span>
               </a>
             </li>
+            {% endif %}
+
             <li>
               <a
                 href="{% url 'hostel' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'hostel' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="building" class="w-5 h-5"></i>
                 <span>Hostel & Transport</span>
               </a>
             </li>
+
             <li>
               <a
                 href="{% url 'sports' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                       {% if request.resolver_match.url_name == 'sports' %}
+                         sidebar-active
+                       {% else %}
+                         text-foreground hover:bg-muted
+                       {% endif %}"
               >
                 <i data-lucide="trophy" class="w-5 h-5"></i>
                 <span>Sports</span>
               </a>
             </li>
-            <!-- <li>
-              <a
-                href="#"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
-              >
-                <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
-                <span>Reports</span>
-              </a>
-            </li> -->
           </ul>
         </nav>
-
         <div class="p-4 border-t border-border">
           <a
-            href="{% url 'login' %}"
-            class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+            href="{% url 'logout' %}" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
           >
             <i data-lucide="log-out" class="w-5 h-5"></i>
             <span>Logout</span>
@@ -393,9 +455,6 @@
             This is the `base.html` template. The styles and icons are now
             working.
           </p>
-          <!-- <p class="mt-2 text-green-600 font-bold">
-            The 'nonetype' error should be fixed now.
-          </p> -->
           {% endblock %}
         </div>
       </main>

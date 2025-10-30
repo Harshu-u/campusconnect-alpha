@@ -26,7 +26,7 @@ class CustomUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Manually style the default fields
-        for fieldname in ['username', 'password', 'password2']:
+        for fieldname in ['username', 'password1', 'password2']:
             if fieldname in self.fields:
                 self.fields[fieldname].widget.attrs.update({
                     'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring'

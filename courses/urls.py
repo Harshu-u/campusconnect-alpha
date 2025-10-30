@@ -1,10 +1,12 @@
 from django.urls import path
 from . import views 
 
+app_name = 'courses'
+
 urlpatterns = [
-    # This path will now correctly match 'courses/' 
-    # and point to your 'courses_view'
+
     path('', views.courses_view, name="courses"), 
+
+    path('timetable/', views.timetable_view, name='timetable'), 
     
-    # We will add add_course, edit_course, etc. here in Phase 3
 ]

@@ -12,7 +12,6 @@ def landing_view(request):
 # View for the dashboard (requires login)
 @login_required
 def dashboard_view(request):
-    # We will make this dynamic in Phase 5
     context = {} 
     return render(request, 'core/dashboard.html', context)
 
@@ -25,9 +24,7 @@ def register_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            
             # TODO: Add logic here to create the associated Student/Faculty profile
-            
             login(request, user)
             return redirect('dashboard')
     else:
@@ -35,5 +32,4 @@ def register_view(request):
         
     return render(request, 'registration/register.html', {'form': form})
 
-# ALL OTHER VIEWS (students_view, faculty_view, etc.)
-# MUST BE CUT from this file and MOVED to their new app's views.py file.
+# ALL OTHER VIEWS (students_view, faculty_view, etc.) MUST BE DELETED FROM THIS FILE

@@ -1,12 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
 
-# -----------------------------------------------------------------------------
-# AUTHENTICATION
-# -----------------------------------------------------------------------------
-
-# The User model STAYS here in 'core'
 class User(AbstractUser):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
@@ -16,5 +10,4 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student')
     profile_image_url = models.CharField(max_length=500, blank=True, null=True)
 
-# ALL OTHER MODELS (Department, Student, Faculty, Course, Book, etc.)
-# MUST BE CUT from this file and MOVED to their new app's models.py file.
+# ALL OTHER MODELS (Department, Student, etc.) MUST BE DELETED FROM THIS FILE

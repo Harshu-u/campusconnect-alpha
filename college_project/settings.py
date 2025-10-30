@@ -31,7 +31,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'core',
+    'core', # For User model, dashboard, landing page
+
+    # Our new apps
+    'students',
+    'faculty',
+    'courses',
+    'attendance',
+    'exams',
+    'library',
+    'fees',
+    'hostel_transport',
+    'sports',
+
+    # Django built-ins
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +69,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        'APP_DIRS': True,
+        'APP_DIRS': True, # This tells Django to look inside each app's 'templates' folder
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -124,7 +137,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # At the very bottom of college_project/settings.py
 
 AUTH_USER_MODEL = 'core.User'
-# LOGIN_REDIRECT_URL = '/' # Old
-LOGIN_REDIRECT_URL = '/dashboard/' # New - Redirect to dashboard after login
-# Optional: Add logout redirect URL if you want users sent somewhere specific after logout
-LOGOUT_REDIRECT_URL = '/' # Redirect to landing page after logout
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'

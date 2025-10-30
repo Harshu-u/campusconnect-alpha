@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+
+{% block title %}Add Faculty{% endblock %}
+
+{% block page_title %}{{ form_title|default:"Faculty Form" }}{% endblock %}
+
+{% block content %}
+<div class="bg-card p-6 rounded-lg shadow-sm max-w-2xl mx-auto">
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class="space-y-4">
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+          <div class="bg-destructive/10 text-destructive text-sm p-3 rounded-md">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-foreground mb-1">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-xs text-muted-foreground mt-1">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <div class="text-destructive text-xs mt-1">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="mt-6 flex items-center gap-4">
+      <button 
+        type="submit" 
+        class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium"
+      >
+        <i data-lucide="save" class="w-4 h-4"></i>
+        Save Faculty
+      </button>
+      <a href="{% url 'faculty' %}" class="text-sm text-muted-foreground hover:underline">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

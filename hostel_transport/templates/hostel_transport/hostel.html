@@ -1,24 +1,35 @@
 {% extends "core/base.html" %}
 
 {% block title %}Hostel & Transport{% endblock %}
-{% block page_title %}Hostel & Transport Management{% endblock %}
+{% block page_title %}Hostel & Transport{% endblock %}
 
 {% block content %}
-<div class="bg-card rounded-lg shadow-sm overflow-hidden">
+<div class="bg-card rounded-2xl shadow-lg border border-border overflow-hidden animate-fade-in-up">
     <div class="border-b border-border">
-        <div class="flex flex-wrap space-x-1 px-4 pt-2">
-            <button class="px-3 py-2 border-b-2 border-primary text-primary font-medium text-sm">Hostels</button>
-            <button class="px-3 py-2 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm">Rooms</button>
-            <button class="px-3 py-2 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm">Allocations</button>
-            <button class="px-3 py-2 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm">Transport Routes</button>
-            <button class="px-3 py-2 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm">Transport Assignments</button>
+        <div class="flex flex-wrap space-x-1 px-4">
+            <button class="tab-button px-4 py-3 border-b-2 border-primary text-primary font-semibold text-sm flex items-center gap-2">
+              <i data-lucide="building" class="w-4 h-4"></i>
+              Hostels
+            </button>
+            <button class="tab-button px-4 py-3 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm flex items-center gap-2">
+              <i data-lucide="bed-double" class="w-4 h-4"></i>
+              Rooms
+            </button>
+            <button class="tab-button px-4 py-3 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm flex items-center gap-2">
+              <i data-lucide="user-check" class="w-4 h-4"></i>
+              Allocations
+            </button>
+            <button class="tab-button px-4 py-3 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm flex items-center gap-2">
+              <i data-lucide="bus" class="w-4 h-4"></i>
+              Transport Routes
+            </button>
         </div>
     </div>
 
     <div class="p-4 space-y-4">
         {% if user.role == 'admin' or user.role == 'faculty' %}
-        <div class="flex justify-end gap-2">
-           <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
+        <div class="flex justify-end gap-3">
+           <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
                 <i data-lucide="plus" class="w-4 h-4"></i> Add Hostel
             </button>
         </div>
@@ -26,7 +37,7 @@
         
         <div class="overflow-x-auto">
             <table class="w-full min-w-max text-sm text-left">
-                <thead class="bg-muted">
+                <thead class="bg-muted border-b border-border">
                     <tr>
                         <th class="p-4 font-medium text-muted-foreground">Hostel Name</th>
                         <th class="p-4 font-medium text-muted-foreground">Type</th>
@@ -39,7 +50,8 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-border">
-                    <tr class="table-row">
+                    
+                    <tr class="table-row stagger-table-row">
                         <td class="p-4 font-medium text-foreground">A Block Hostel</td>
                         <td class="p-4 text-muted-foreground">Boys</td>
                         <td class="p-4 text-muted-foreground">85 / 100</td>
@@ -47,13 +59,14 @@
                         <td class="p-4 text-muted-foreground">9876543210</td>
                         {% if user.role == 'admin' or user.role == 'faculty' %}
                         <td class="p-4 flex justify-end gap-2">
-                            <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                            <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                            <button class="p-2 rounded-md hover:bg-muted text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-destructive hover:scale-110"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                         {% endif %}
                     </tr>
-                    <tr class="table-row">
+                    
+                    <tr class="table-row stagger-table-row">
                         <td class="p-4 font-medium text-foreground">B Block Hostel</td>
                         <td class="p-4 text-muted-foreground">Girls</td>
                         <td class="p-4 text-muted-foreground">110 / 120</td>
@@ -61,20 +74,21 @@
                         <td class="p-4 text-muted-foreground">9123456780</td>
                         {% if user.role == 'admin' or user.role == 'faculty' %}
                         <td class="p-4 flex justify-end gap-2">
-                             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                            <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                            <button class="p-2 rounded-md hover:bg-muted text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                             <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-destructive hover:scale-110"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                         {% endif %}
                     </tr>
+                    
                 </tbody>
             </table>
         </div>
         <div class="pt-4 border-t border-border flex items-center justify-between">
-            <p class="text-sm text-muted-foreground">Showing 1 to 2 of 2 results</p>
+            <p class="text-sm text-muted-foreground">Showing <strong>2</strong> to <strong>2</strong> results</p>
             <div class="flex gap-2">
-                <button class="px-3 py-1 rounded-md border border-input text-sm font-medium hover:bg-muted" disabled>Previous</button>
-                <button class="px-3 py-1 rounded-md border border-input text-sm font-medium hover:bg-muted">Next</button>
+                <button class="px-4 py-2 rounded-lg border border-input text-sm font-medium transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground disabled:hover:border-input" disabled>Previous</button>
+                <button class="px-4 py-2 rounded-lg border border-input text-sm font-medium transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground disabled:hover:border-input">Next</button>
             </div>
         </div>
     </div>

@@ -31,12 +31,15 @@
                 foreground: "var(--popover-foreground)",
               },
               primary: {
+                light: "var(--primary-light)",
                 DEFAULT: "var(--primary)",
+                dark: "var(--primary-dark)",
                 foreground: "var(--primary-foreground)",
-                dark: "var(--primary-dark)", 
               },
               secondary: {
+                light: "var(--secondary-light)",
                 DEFAULT: "var(--secondary)",
+                dark: "var(--secondary-dark)",
                 foreground: "var(--secondary-foreground)",
               },
               muted: {
@@ -61,16 +64,6 @@
                 "4.": "var(--chart-4)",
                 5: "var(--chart-5)",
               },
-              sidebar: {
-                DEFAULT: "var(--sidebar-background)",
-                foreground: "var(--sidebar-foreground)",
-                primary: "var(--sidebar-primary)",
-                "primary-foreground": "var(--sidebar-primary-foreground)",
-                accent: "var(--sidebar-accent)",
-                "accent-foreground": "var(--sidebar-accent-foreground)",
-                border: "var(--sidebar-border)",
-                ring: "var(--sidebar-ring)",
-              },
             },
             fontFamily: {
               sans: ["var(--font-sans)"],
@@ -91,22 +84,40 @@
                 "50%": { backgroundPosition: "100% 50%" },
                 "100%": { backgroundPosition: "0% 50%" },
               },
-              /* NEW: Keyframes for global page fade-in */
+              "background-pan": {
+                "0%": { backgroundPosition: "0% 50%" },
+                "50%": { backgroundPosition: "100% 50%" },
+                "100%": { backgroundPosition: "0% 50%" },
+              },
+              "slide-in-left": {
+                "from": { opacity: 0, transform: "translateX(-20px)" },
+                "to": { opacity: 1, transform: "translateX(0)" },
+              },
               "fadeIn": {
                 "from": { opacity: 0, transform: "translateY(10px)" },
                 "to": { opacity: 1, transform: "translateY(0)" },
+              },
+              "pulse-soft": {
+                "0%, 100%": { boxShadow: "0 0 0 0 var(--primary-light)" },
+                "50%": { boxShadow: "0 0 0 10px rgba(0,0,0,0)" },
+              },
+              "shimmer": {
+                "100%": { transform: "translateX(100%)" },
               },
             },
             animation: {
               "accordion-down": "accordion-down 0.2s ease-out",
               "accordion-up": "accordion-up 0.2s ease-out",
               "gradient-pulse": "gradient-animation 8s ease-in-out infinite",
-              /* NEW: Animation definition for page fade-in */
+              "background-pan": "background-pan 10s ease-in-out infinite",
               "fade-in-up": "fadeIn 0.5s ease-out forwards",
+              "slide-in-left": "slide-in-left 0.5s ease-out forwards",
+              "pulse-soft": "pulse-soft 2s infinite",
+              "shimmer": "shimmer 1.5s infinite",
             },
           },
         },
-      }
+      };
     </script>
 
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -115,69 +126,77 @@
 
     <style type="text/css">
       :root {
-        --background: hsl(210, 40%, 98%);
-        --foreground: hsl(222, 84%, 5%);
+        --background: hsl(220, 20%, 97%);
+        --foreground: hsl(222, 30%, 15%);
         --card: hsl(0, 0%, 100%);
-        --card-foreground: hsl(222, 84%, 5%);
+        --card-foreground: hsl(222, 30%, 15%);
         --popover: hsl(0, 0%, 100%);
-        --popover-foreground: hsl(222, 84%, 5%);
+        --popover-foreground: hsl(222, 30%, 15%);
+        
+        --primary-light: hsl(210, 100%, 80%);
         --primary: hsl(210, 100%, 50%);
-        --primary-dark: hsl(260, 100%, 55%); /* NEW Violet Color */
-        --primary-foreground: hsl(210, 40%, 98%);
+        --primary-dark: hsl(260, 100%, 55%);
+        --primary-foreground: hsl(0, 0%, 100%);
+
+        --secondary-light: hsl(186, 100%, 80%);
         --secondary: hsl(186, 100%, 38%);
-        --secondary-foreground: hsl(210, 40%, 98%);
-        --muted: hsl(210, 40%, 96%);
+        --secondary-dark: hsl(186, 100%, 28%);
+        --secondary-foreground: hsl(0, 0%, 100%);
+        
+        --muted: hsl(220, 20%, 94%);
         --muted-foreground: hsl(215, 16%, 47%);
         --accent: hsl(36, 100%, 50%);
-        --accent-foreground: hsl(222, 84%, 5%);
+        --accent-foreground: hsl(222, 30%, 15%);
         --destructive: hsl(0, 84%, 60%);
-        --destructive-foreground: hsl(210, 40%, 98%);
-        --border: hsl(214, 32%, 91%);
-        --input: hsl(214, 32%, 91%);
+        --destructive-foreground: hsl(0, 0%, 100%);
+        --border: hsl(220, 20%, 90%);
+        --input: hsl(220, 20%, 90%);
         --ring: hsl(210, 100%, 50%);
+
         --chart-1: hsl(210, 100%, 50%);
         --chart-2: hsl(186, 100%, 38%);
         --chart-3: hsl(36, 100%, 50%);
         --chart-4: hsl(142, 76%, 36%);
         --chart-5: hsl(350, 89%, 60%);
-        --sidebar: hsl(180, 6.6667%, 97.0588%);
-        --sidebar-foreground: hsl(210, 25%, 7.8431%);
-        --sidebar-primary: hsl(203.8863, 88.2845%, 53.1373%);
-        --sidebar-primary-foreground: hsl(0, 0%, 100%);
-        --sidebar-accent: hsl(211.5789, 51.3514%, 92.7451%);
-        --sidebar-accent-foreground: hsl(203.8863, 88.2845%, 53.1373%);
-        --sidebar-border: hsl(205, 25%, 90.5882%);
-        --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
+        
         --font-sans: "Inter", "system-ui", sans-serif;
         --font-serif: Georgia, serif;
         --font-mono: Menlo, monospace;
-        --radius: 8px;
+        --radius: 12px;
         --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
       }
       .dark {
-        --background: hsl(0, 0%, 0%);
-        --foreground: hsl(200, 6.6667%, 91.1765%);
-        --card: hsl(228, 9.8039%, 10%);
-        --card-foreground: hsl(0, 0%, 85.098%);
-        --popover: hsl(0, 0%, 0%);
-        --popover-foreground: hsl(200, 6.6667%, 91.1765%);
-        --primary: hsl(203.7736, 87.6033%, 52.549%);
-        --primary-dark: hsl(260, 80%, 60%); /* NEW Violet for dark mode */
+        --background: hsl(222, 30%, 10%);
+        --foreground: hsl(210, 20%, 90%);
+        --card: hsl(222, 30%, 13%);
+        --card-foreground: hsl(210, 20%, 90%);
+        --popover: hsl(222, 30%, 10%);
+        --popover-foreground: hsl(210, 20%, 90%);
+        
+        --primary-light: hsl(210, 100%, 70%);
+        --primary: hsl(210, 100%, 60%);
+        --primary-dark: hsl(260, 100%, 65%);
         --primary-foreground: hsl(0, 0%, 100%);
-        --secondary: hsl(195, 15.3846%, 94.902%);
-        --secondary-foreground: hsl(210, 25%, 7.8431%);
-        --muted: hsl(0, 0%, 9.4118%);
-        --muted-foreground: hsl(210, 3.3898%, 46.2745%);
-        --accent: hsl(205.7143, 70%, 7.8431%);
-        --accent-foreground: hsl(203.7736, 87.6033%, 52.549%);
-        --destructive: hsl(356.3033, 90.5579%, 54.3137%);
+
+        --secondary-light: hsl(186, 100%, 70%);
+        --secondary: hsl(186, 100%, 48%);
+        --secondary-dark: hsl(186, 100%, 38%);
+        --secondary-foreground: hsl(0, 0%, 100%);
+        
+        --muted: hsl(222, 30%, 18%);
+        --muted-foreground: hsl(215, 16%, 55%);
+        --accent: hsl(36, 100%, 60%);
+        --accent-foreground: hsl(210, 20%, 90%);
+        --destructive: hsl(0, 84%, 70%);
         --destructive-foreground: hsl(0, 0%, 100%);
-        --border: hsl(210, 5.2632%, 14.902%);
-        --input: hsl(207.6923, 27.6596%, 18.4314%);
-        --ring: hsl(202.8169, 89.1213%, 53.1373%);
+        --border: hsl(222, 30%, 25%);
+        --input: hsl(222, 30%, 25%);
+        --ring: hsl(210, 100%, 60%);
       }
       body {
         font-family: var(--font-sans), system-ui, sans-serif;
@@ -185,7 +204,24 @@
         -moz-osx-font-smoothing: grayscale;
       }
       
-      /* --- NEW: Animated Gradient Active Sidebar Link --- */
+      /* --- Custom Scrollbar --- */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--muted);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-dark);
+      }
+      
+      /* --- Animated Gradient Active Sidebar Link --- */
       .sidebar-active {
         color: var(--primary-foreground);
         background: linear-gradient(
@@ -196,9 +232,11 @@
         );
         background-size: 300% 300%;
         animation: gradient-animation 8s ease-in-out infinite;
+        box-shadow: var(--shadow-lg);
+        transform: scale(1.03);
       }
       
-      /* --- NEW: Animated Gradient Button --- */
+      /* --- Animated Gradient Button --- */
       .btn-primary {
         color: var(--primary-foreground);
         background: linear-gradient(
@@ -213,70 +251,112 @@
       }
 
       .btn-primary:hover, .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: var(--shadow-xl);
       }
       
-      .table-row, .stat-card, nav a, button {
-         transition: all 0.2s ease-in-out;
+      /* --- Base transition for interactive elements --- */
+      .table-row, .stat-card, nav a, button, .form-input, .form-select, .form-date, .tab-button {
+         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* --- NEW: Table Row Hover Effect --- */
+      /* --- Table Row Hover Effect --- */
       .table-row:hover {
         background-color: var(--muted);
+        transform: scale(1.01);
+        box-shadow: var(--shadow-md);
+        z-index: 10;
+        position: relative;
       }
       
-      /* --- NEW: Bouncy Sidebar Icon Animation --- */
+      /* --- Bouncy Sidebar Icon Animation --- */
       nav a:hover i {
-        transform: scale(1.1) rotate(5deg);
+        transform: scale(1.2) rotate(8deg);
       }
       nav a i {
-        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       
-      /* Styling for messages */
+      /* --- Styling for messages --- */
       .message-list {
         list-style: none;
         padding: 0;
         margin: 0;
+        position: fixed;
+        top: 80px;
+        right: 24px;
+        z-index: 1000;
+        width: 320px;
       }
       .message-item {
-        padding: 0.75rem 1rem;
+        padding: 1rem 1.25rem;
         margin-bottom: 1rem;
         border-radius: var(--radius);
         font-weight: 500;
         font-size: 0.875rem; /* text-sm */
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        animation: slide-in-left 0.5s ease-out forwards;
       }
       .message-item.success {
-        background-color: hsl(145, 63%, 92%);
-        color: hsl(145, 100%, 25%);
-        border: 1px solid hsl(145, 100%, 80%);
+        background-color: hsl(145, 63%, 95%);
+        color: hsl(145, 100%, 20%);
+        border-color: hsl(145, 100%, 80%);
+      }
+      .dark .message-item.success {
+        background-color: hsl(145, 63%, 20%);
+        color: hsl(145, 100%, 80%);
+        border-color: hsl(145, 100%, 30%);
       }
       .message-item.info {
         background-color: hsl(210, 100%, 95%);
         color: hsl(210, 90%, 40%);
-        border: 1px solid hsl(210, 100%, 85%);
+        border-color: hsl(210, 100%, 85%);
+      }
+      .dark .message-item.info {
+        background-color: hsl(210, 100%, 20%);
+        color: hsl(210, 90%, 80%);
+        border-color: hsl(210, 100%, 30%);
       }
       .message-item.error {
         background-color: hsl(0, 100%, 97%);
         color: hsl(0, 90%, 40%);
-        border: 1px solid hsl(0, 100%, 90%);
+        border-color: hsl(0, 100%, 90%);
+      }
+      .dark .message-item.error {
+        background-color: hsl(0, 100%, 20%);
+        color: hsl(0, 90%, 80%);
+        border-color: hsl(0, 100%, 30%);
+      }
+      
+      /* --- Animate list items with delay --- */
+      .stagger-animation {
+        opacity: 0;
+        animation: fade-in-up 0.5s ease-out forwards;
+      }
+      
+      .stagger-table-row {
+        opacity: 0;
+        animation: slide-in-left 0.5s ease-out forwards;
       }
 
     </style>
   </head>
   <body class="bg-background text-foreground">
     <div class="flex h-screen">
-      <aside class="w-64 bg-card border-r border-border flex flex-col">
+      <aside class="w-64 bg-card border-r border-border flex flex-col shadow-lg z-20">
         <div class="p-6 border-b border-border">
           <div class="flex items-center space-x-3">
             <div
-              class="w-10 h-10 btn-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold"
+              class="w-10 h-10 btn-primary rounded-xl flex items-center justify-center text-primary-foreground font-bold shadow-lg"
             >
               CMS
             </div>
             <div>
-              <h1 class="font-bold text-foreground">Campus Connect</h1> 
+              <h1 class="font-bold text-lg text-foreground">Campus Connect</h1> 
               <p class="text-sm text-muted-foreground capitalize">
                 {% if user.is_authenticated %} {{ user.role|default:"User" }} {%
                 else %} Guest {% endif %}
@@ -290,11 +370,11 @@
             <li>
               <a
                 href="{% url 'dashboard' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'dashboard' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
@@ -306,11 +386,11 @@
             <li>
               <a
                 href="{% url 'students' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'students' or request.resolver_match.url_name == 'add_student' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="graduation-cap" class="w-5 h-5"></i>
@@ -323,11 +403,11 @@
             <li>
               <a
                 href="{% url 'faculty' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'faculty' or request.resolver_match.url_name == 'add_faculty' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="users" class="w-5 h-5"></i>
@@ -340,11 +420,11 @@
             <li>
               <a
                 href="{% url 'courses:courses' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.app_name == 'courses' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="book-open" class="w-5 h-5"></i>
@@ -356,11 +436,11 @@
             <li>
               <a
                 href="{% url 'timetable:timetable' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.app_name == 'timetable' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="calendar" class="w-5 h-5"></i>
@@ -371,11 +451,11 @@
             <li>
               <a
                 href="{% url 'attendance' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'attendance' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
@@ -386,11 +466,11 @@
             <li>
               <a
                 href="{% url 'exams' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'exams' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="clipboard-check" class="w-5 h-5"></i>
@@ -401,11 +481,11 @@
             <li>
               <a
                 href="{% url 'library' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'library' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="library" class="w-5 h-5"></i>
@@ -416,11 +496,11 @@
             <li>
               <a
                 href="{% url 'fees' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'fees' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="dollar-sign" class="w-5 h-5"></i>
@@ -433,11 +513,11 @@
             <li>
               <a
                 href="{% url 'hostel' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'hostel' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="building" class="w-5 h-5"></i>
@@ -448,11 +528,11 @@
             <li>
               <a
                 href="{% url 'sports' %}"
-                class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-medium
                        {% if request.resolver_match.url_name == 'sports' %}
                          sidebar-active
                        {% else %}
-                         text-foreground hover:bg-muted
+                         text-foreground/80 hover:text-foreground hover:bg-muted
                        {% endif %}"
               >
                 <i data-lucide="trophy" class="w-5 h-5"></i>
@@ -466,7 +546,7 @@
             {% csrf_token %}
             <button 
               type="submit" 
-              class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-foreground hover:bg-muted transition-colors"
+              class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-foreground/80 hover:text-destructive hover:bg-destructive/10 transition-colors duration-300 font-medium"
             >
               <i data-lucide="log-out" class="w-5 h-5"></i>
               <span>Logout</span>
@@ -476,36 +556,36 @@
       </aside>
 
       <main class="flex-1 flex flex-col overflow-auto">
-        <header class="bg-card border-b border-border px-6 py-4">
+        <header class="bg-card/80 backdrop-blur-md border-b border-border px-6 py-4 sticky top-0 z-10">
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-xl font-semibold text-foreground">
+              <h2 class="text-2xl font-semibold text-foreground">
                 {% block page_title %}Dashboard{% endblock %}
               </h2>
 
               <p class="text-sm text-muted-foreground">
                 Welcome back, {% if user.is_authenticated %} {{ user.first_name
-                }} {{ user.last_name }} {% else %} Guest {% endif %}
+                }} {{ user.last_name }} {% else %} Guest {% endif %} 👋
               </p>
             </div>
 
             <div class="flex items-center space-x-4">
               <div class="relative">
                 <button
-                  class="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
+                  class="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors relative"
                 >
                   <i data-lucide="bell" class="w-5 h-5"></i>
                   <span
-                    class="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center text-xs p-0 bg-red-600 text-white rounded-full"
+                    class="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-xs p-0 bg-red-600 text-white rounded-full animate-pulse"
                   >
                     3
                   </span>
                 </button>
               </div>
 
-              <div class="flex items-center space-x-2">
+              <div class="flex items-center space-x-3">
                 <div
-                  class="w-8 h-8 btn-primary rounded-full flex items-center justify-center text-primary-foreground font-medium text-sm"
+                  class="w-10 h-10 btn-primary rounded-full flex items-center justify-center text-primary-foreground font-medium text-sm shadow-lg"
                 >
                   {% if user.is_authenticated and user.first_name and user.last_name %} 
                     {{ user.first_name|first|upper }}{{ user.last_name|first|upper }} 
@@ -513,37 +593,69 @@
                     {{ user.username|first|upper }}
                   {% else %} G {% endif %}
                 </div>
-                <span class="text-sm font-medium text-foreground">
-                  {% if user.is_authenticated %} {{ user.first_name }} {{
-                  user.last_name }} {% else %} Guest User {% endif %}
-                </span>
+                <div class="text-sm">
+                  <span class="font-medium text-foreground">
+                    {% if user.is_authenticated %} {{ user.first_name }} {{
+                    user.last_name }} {% else %} Guest User {% endif %}
+                  </span>
+                   <p class="text-xs text-muted-foreground capitalize">{{ user.role|default:"User" }}</p>
+                </div>
               </div>
             </div>
           </div>
         </header>
 
-        <div class="p-6 flex-1 overflow-y-auto animate-fade-in-up">
+        <div class="p-6 flex-1 overflow-y-auto">
+          
           {% if messages %}
             <ul class="message-list">
                 {% for message in messages %}
-                    <li class="message-item {{ message.tags }}">{{ message }}</li>
+                    <li class="message-item {{ message.tags }}" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" x-transition>
+                      {% if message.tags == 'success' %}
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                      {% elif message.tags == 'info' %}
+                        <i data-lucide="info" class="w-5 h-5"></i>
+                      {% elif message.tags == 'error' %}
+                         <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                      {% else %}
+                         <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                      {% endif %}
+                      <span>{{ message }}</span>
+                    </li>
                 {% endfor %}
             </ul>
           {% endif %}
           
-          {% block content %}
-          <h1 class="text-2xl font-bold">Welcome to your Django Project!</h1>
-          <p class="mt-2">
-            This is the `base.html` template. The styles and icons are now
-            working.
-          </p>
-          {% endblock %}
+          <div class_="animate-fade-in-up">
+            {% block content %}
+            <h1 class="text-2xl font-bold">Welcome to your Django Project!</h1>
+            <p class="mt-2">
+              This is the `base.html` template. The styles and icons are now
+              working.
+            </p>
+            {% endblock %}
+          </div>
         </div>
       </main>
     </div>
 
     <script>
       lucide.createIcons()
+      
+      // Staggered list animation logic
+      document.addEventListener("DOMContentLoaded", () => {
+        const animatedItems = document.querySelectorAll(".stagger-animation");
+        animatedItems.forEach((item, index) => {
+          item.style.setProperty("--delay", `${index * 100}ms`);
+          item.style.animationDelay = item.style.getPropertyValue("--delay");
+        });
+        
+        const animatedTableRows = document.querySelectorAll(".stagger-table-row");
+        animatedTableRows.forEach((item, index) => {
+          item.style.setProperty("--delay", `${index * 75}ms`);
+          item.style.animationDelay = item.style.getPropertyValue("--delay");
+        });
+      });
     </script>
     
     {% block extra_js %}{% endblock %}

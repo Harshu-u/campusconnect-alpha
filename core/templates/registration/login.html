@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - College Management</title>
+    <title>Login - Campus Connect</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -29,13 +29,15 @@
                 foreground: "var(--popover-foreground)",
               },
               primary: {
+                light: "var(--primary-light)",
                 DEFAULT: "var(--primary)",
+                dark: "var(--primary-dark)",
                 foreground: "var(--primary-foreground)",
-                /* NEW: Add a dark variant for gradients */
-                dark: "var(--primary-dark)", 
               },
               secondary: {
+                light: "var(--secondary-light)",
                 DEFAULT: "var(--secondary)",
+                dark: "var(--secondary-dark)",
                 foreground: "var(--secondary-foreground)",
               },
               muted: {
@@ -53,23 +55,6 @@
               border: "var(--border)",
               input: "var(--input)",
               ring: "var(--ring)",
-              chart: {
-                1: "var(--chart-1)",
-                2: "var(--chart-2)",
-                3: "var(--chart-3)",
-                "4.": "var(--chart-4)",
-                5: "var(--chart-5)",
-              },
-              sidebar: {
-                DEFAULT: "var(--sidebar-background)",
-                foreground: "var(--sidebar-foreground)",
-                primary: "var(--sidebar-primary)",
-                "primary-foreground": "var(--sidebar-primary-foreground)",
-                accent: "var(--sidebar-accent)",
-                "accent-foreground": "var(--sidebar-accent-foreground)",
-                border: "var(--sidebar-border)",
-                ring: "var(--sidebar-ring)",
-              },
             },
             fontFamily: {
               sans: ["var(--font-sans)"],
@@ -77,26 +62,19 @@
               mono: ["var(--font-mono)"],
             },
             keyframes: {
-              "accordion-down": {
-                from: { height: "0" },
-                to: { height: "var(--radix-accordion-content-height)" },
-              },
-              "accordion-up": {
-                from: { height: "var(--radix-accordion-content-height)" },
-                to: { height: "0" },
-              },
-              /* NEW: Keyframes for the gradient animation */
               "gradient-animation": {
                 "0%": { backgroundPosition: "0% 50%" },
                 "50%": { backgroundPosition: "100% 50%" },
                 "100%": { backgroundPosition: "0% 50%" },
               },
+              "fadeIn": {
+                "from": { opacity: 0, transform: "translateY(20px)" },
+                "to": { opacity: 1, transform: "translateY(0)" },
+              },
             },
             animation: {
-              "accordion-down": "accordion-down 0.2s ease-out",
-              "accordion-up": "accordion-up 0.2s ease-out",
-              /* NEW: Animation definition */
-              "gradient-pulse": "gradient-animation 8s ease-in-out infinite",
+              "gradient-pulse": "gradient-animation 15s ease-in-out infinite",
+              "fade-in-up": "fadeIn 0.6s ease-out forwards",
             },
           },
         },
@@ -104,97 +82,83 @@
     </script>
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style type="text/css">
       :root {
-        --background: hsl(210, 40%, 98%);
-        --foreground: hsl(222, 84%, 5%);
+        --background: hsl(220, 20%, 97%);
+        --foreground: hsl(222, 30%, 15%);
         --card: hsl(0, 0%, 100%);
-        --card-foreground: hsl(222, 84%, 5%);
+        --card-foreground: hsl(222, 30%, 15%);
         --popover: hsl(0, 0%, 100%);
-        --popover-foreground: hsl(222, 84%, 5%);
+        --popover-foreground: hsl(222, 30%, 15%);
+        
+        --primary-light: hsl(210, 100%, 80%);
         --primary: hsl(210, 100%, 50%);
-        --primary-dark: hsl(260, 100%, 55%); /* NEW Violet Color */
-        --primary-foreground: hsl(210, 40%, 98%);
+        --primary-dark: hsl(260, 100%, 55%);
+        --primary-foreground: hsl(0, 0%, 100%);
+
+        --secondary-light: hsl(186, 100%, 80%);
         --secondary: hsl(186, 100%, 38%);
-        --secondary-foreground: hsl(210, 40%, 98%);
-        --muted: hsl(210, 40%, 96%);
+        --secondary-dark: hsl(186, 100%, 28%);
+        --secondary-foreground: hsl(0, 0%, 100%);
+        
+        --muted: hsl(220, 20%, 94%);
         --muted-foreground: hsl(215, 16%, 47%);
         --accent: hsl(36, 100%, 50%);
-        --accent-foreground: hsl(222, 84%, 5%);
+        --accent-foreground: hsl(222, 30%, 15%);
         --destructive: hsl(0, 84%, 60%);
-        --destructive-foreground: hsl(210, 40%, 98%);
-        --border: hsl(214, 32%, 91%);
-        --input: hsl(214, 32%, 91%);
+        --destructive-foreground: hsl(0, 0%, 100%);
+        --border: hsl(220, 20%, 90%);
+        --input: hsl(220, 20%, 90%);
         --ring: hsl(210, 100%, 50%);
-        --chart-1: hsl(210, 100%, 50%);
-        --chart-2: hsl(186, 100%, 38%);
-        --chart-3: hsl(36, 100%, 50%);
-        --chart-4: hsl(142, 76%, 36%);
-        --chart-5: hsl(350, 89%, 60%);
-        --sidebar: hsl(180, 6.6667%, 97.0588%);
-        --sidebar-foreground: hsl(210, 25%, 7.8431%);
-        --sidebar-primary: hsl(203.8863, 88.2845%, 53.1373%);
-        --sidebar-primary-foreground: hsl(0, 0%, 100%);
-        --sidebar-accent: hsl(211.5789, 51.3514%, 92.7451%);
-        --sidebar-accent-foreground: hsl(203.8863, 88.2845%, 53.1373%);
-        --sidebar-border: hsl(205, 25%, 90.5882%);
-        --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
+        
         --font-sans: "Inter", "system-ui", sans-serif;
         --font-serif: Georgia, serif;
         --font-mono: Menlo, monospace;
-        --radius: 8px;
-        --shadow-2xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-sm: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-md: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 2px 4px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-lg: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 4px 6px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 8px 10px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-2xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --tracking-normal: 0em;
-        --spacing: 0.25rem;
+        --radius: 12px;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
       }
       .dark {
-        --background: hsl(0, 0%, 0%);
-        --foreground: hsl(200, 6.6667%, 91.1765%);
-        --card: hsl(228, 9.8039%, 10%);
-        --card-foreground: hsl(0, 0%, 85.098%);
-        --popover: hsl(0, 0%, 0%);
-        --popover-foreground: hsl(200, 6.6667%, 91.1765%);
-        --primary: hsl(203.7736, 87.6033%, 52.549%);
-        --primary-dark: hsl(260, 80%, 60%); /* NEW Violet for dark mode */
+        --background: hsl(222, 30%, 10%);
+        --foreground: hsl(210, 20%, 90%);
+        --card: hsl(222, 30%, 13%);
+        --card-foreground: hsl(210, 20%, 90%);
+        --popover: hsl(222, 30%, 10%);
+        --popover-foreground: hsl(210, 20%, 90%);
+        
+        --primary-light: hsl(210, 100%, 70%);
+        --primary: hsl(210, 100%, 60%);
+        --primary-dark: hsl(260, 100%, 65%);
         --primary-foreground: hsl(0, 0%, 100%);
-        --secondary: hsl(195, 15.3846%, 94.902%);
-        --secondary-foreground: hsl(210, 25%, 7.8431%);
-        --muted: hsl(0, 0%, 9.4118%);
-        --muted-foreground: hsl(210, 3.3898%, 46.2745%);
-        --accent: hsl(205.7143, 70%, 7.8431%);
-        --accent-foreground: hsl(203.7736, 87.6033%, 52.549%);
-        --destructive: hsl(356.3033, 90.5579%, 54.3137%);
+        
+        --secondary-light: hsl(186, 100%, 70%);
+        --secondary: hsl(186, 100%, 48%);
+        --secondary-dark: hsl(186, 100%, 38%);
+        --secondary-foreground: hsl(0, 0%, 100%);
+
+        --muted: hsl(222, 30%, 18%);
+        --muted-foreground: hsl(215, 16%, 55%);
+        --accent: hsl(36, 100%, 60%);
+        --accent-foreground: hsl(210, 20%, 90%);
+        --destructive: hsl(0, 84%, 70%);
         --destructive-foreground: hsl(0, 0%, 100%);
-        --border: hsl(210, 5.2632%, 14.902%);
-        --input: hsl(207.6923, 27.6596%, 18.4314%);
-        --ring: hsl(202.8169, 89.1213%, 53.1373%);
+        --border: hsl(222, 30%, 25%);
+        --input: hsl(222, 30%, 25%);
+        --ring: hsl(210, 100%, 60%);
       }
       body {
         font-family: var(--font-sans), system-ui, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-      .sidebar-active {
-        background-color: var(--primary);
-        color: var(--primary-foreground);
-      }
       
       .btn-primary {
         color: var(--primary-foreground);
-        /* Apply the animated gradient */
         background: linear-gradient(
           60deg, 
           var(--primary), 
@@ -203,55 +167,112 @@
         );
         background-size: 300% 300%;
         animation: gradient-animation 8s ease-in-out infinite;
-        
-        /* Add transitions for hover */
         transition: all 0.3s ease-in-out;
       }
-      
       .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: var(--shadow-xl);
       }
+
+      /* --- Custom Form Input Style --- */
+      .form-input {
+        background-color: var(--background);
+        border: 1px solid var(--border);
+        color: var(--foreground);
+        border-radius: var(--radius);
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        transition: all 0.3s ease-in-out;
+        box-shadow: var(--shadow-sm);
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+      }
+      .dark .form-input:focus {
+         box-shadow: 0 0 0 3px hsl(210, 100%, 60%, 0.3);
+      }
+      
+      /* --- Animated Gradient Background --- */
+      .animated-gradient-bg {
+        background: linear-gradient(
+          -45deg, 
+          hsl(210, 100%, 70%), 
+          hsl(260, 100%, 80%), 
+          hsl(186, 100%, 70%),
+          hsl(36, 100%, 70%)
+        );
+        background-size: 400% 400%;
+        animation: gradient-pulse 15s ease-in-out infinite;
+      }
+      .dark .animated-gradient-bg {
+         background: linear-gradient(
+          -45deg, 
+          hsl(210, 100%, 20%), 
+          hsl(260, 100%, 25%), 
+          hsl(186, 100%, 15%),
+          hsl(222, 30%, 10%)
+        );
+        background-size: 400% 400%;
+        animation: gradient-pulse 15s ease-in-out infinite;
+      }
+      
+      /* --- Glassmorphism Card --- */
+      .glass-card {
+        background: hsla(0, 0%, 100%, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid hsla(0, 0%, 100%, 0.2);
+        box-shadow: var(--shadow-2xl);
+      }
+      .dark .glass-card {
+         background: hsla(222, 30%, 13%, 0.6);
+         border: 1px solid hsla(222, 30%, 25%, 0.5);
+      }
+
     </style>
 </head>
-<body class="bg-background text-foreground flex items-center justify-center min-h-screen">
+<body class="animated-gradient-bg text-foreground flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-md bg-card p-8 rounded-lg shadow-md border border-border">
+    <div class="w-full max-w-md p-8 md:p-10 rounded-2xl glass-card animate-fade-in-up">
+        
         <div class="text-center mb-8">
-             <div class="w-12 h-12 btn-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-xl mx-auto mb-4">
+             <div class="w-14 h-14 btn-primary rounded-2xl flex items-center justify-center text-primary-foreground font-bold text-2xl mx-auto mb-5 shadow-lg">
                 CMS
              </div>
-            <h1 class="text-2xl font-bold text-foreground">Login to Your Account</h1>
-            <p class="text-muted-foreground text-sm mt-1">College Management System</p>
+            <h1 class="text-3xl font-bold text-foreground">Welcome Back!</h1>
+            <p class="text-muted-foreground text-sm mt-2">Login to your Campus Connect account</p>
         </div>
+
+        {# Display messages from other pages (like register) #}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="bg-blue-100 border border-blue-300 text-blue-800 p-3 rounded-lg mb-6 text-sm" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" x-transition>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
         {# Display errors if login fails #}
         {% if form.errors %}
-            <div class="bg-destructive/10 border border-destructive text-destructive p-3 rounded-md mb-6 text-sm">
+            <div class="bg-destructive/10 border border-destructive text-destructive p-3 rounded-lg mb-6 text-sm">
                 Your username and password didn't match. Please try again.
             </div>
         {% endif %}
 
-        {# Display message if user just logged out #}
-        {% if next %}
-            {% if user.is_authenticated %}
-            <div class="bg-muted border border-border text-muted-foreground p-3 rounded-md mb-6 text-sm">
-                Your account doesn't have access to this page. To proceed,
-                please login with an account that has access.
-            </div>
-            {% else %}
-             <div class="bg-muted border border-border text-muted-foreground p-3 rounded-md mb-6 text-sm">
+        {% if next and not user.is_authenticated %}
+             <div class="bg-muted border border-border text-muted-foreground p-3 rounded-lg mb-6 text-sm">
                 Please login to see this page.
              </div>
-            {% endif %}
         {% endif %}
 
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %} {# IMPORTANT security tag #}
             
-            <div class="space-y-4">
-                <div>
-                    <label for="id_username" class="block text-sm font-medium text-foreground mb-1">Username</label>
+            <div class="space-y-5">
+                <div class="relative">
+                    <label for="id_username" class="absolute -top-2.5 left-3 px-1 bg-card text-xs font-medium text-muted-foreground">Username</label>
                     <input 
                         type="text" 
                         name="username" 
@@ -260,37 +281,44 @@
                         maxlength="150" 
                         required 
                         id="id_username"
-                        class="w-full px-3 py-2 rounded-md border border-input bg-background text-sm transition-all focus:ring-2 focus:ring-ring focus:border-primary"
+                        class="form-input w-full"
+                        placeholder="Enter your username"
                     >
                 </div>
-                <div>
-                    <label for="id_password" class="block text-sm font-medium text-foreground mb-1">Password</label>
+                <div class="relative">
+                    <label for="id_password" class="absolute -top-2.5 left-3 px-1 bg-card text-xs font-medium text-muted-foreground">Password</label>
                     <input 
                         type="password" 
                         name="password" 
                         autocomplete="current-password" 
                         required 
                         id="id_password"
-                        class="w-full px-3 py-2 rounded-md border border-input bg-background text-sm transition-all focus:ring-2 focus:ring-ring focus:border-primary"
+                        class="form-input w-full"
+                        placeholder="Enter your password"
                     >
-                    {# Link for password reset (optional) #}
-                    {# <a href="{% url 'password_reset' %}" class="text-xs text-primary hover:underline mt-1 block text-right">Forgot password?</a> #}
                 </div>
             </div>
 
             <button 
                 type="submit" 
-                class="btn-primary w-full px-4 py-2 rounded-md text-sm font-medium mt-6"
+                class="btn-primary w-full px-4 py-3 rounded-lg text-sm font-semibold mt-8 tracking-wide"
             >
                 Login
             </button>
              <input type="hidden" name="next" value="{{ next }}">
         </form>
-        {# Link to Sign up (if applicable) #}
-        <p class="text-center text-sm text-muted-foreground mt-6">
-    Don't have an account? <a href="{% url 'register' %}" class="text-primary hover:underline">Sign up</a>
+        
+        <p class="text-center text-sm text-muted-foreground mt-8">
+            Don't have an account? 
+            <a href="{% url 'register' %}" class="font-semibold text-primary hover:text-primary-dark hover:underline">
+                Sign up
+            </a>
         </p>
     </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
 
 </body>
 </html>

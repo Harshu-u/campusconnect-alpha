@@ -4,6 +4,11 @@ from core.models import User
 
 class StudentForm(forms.ModelForm):
     
+    # Define common CSS classes for all form widgets
+    FORM_INPUT_CLASSES = 'form-input w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
+    FORM_SELECT_CLASSES = 'form-select w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
+    FORM_DATE_CLASSES = 'form-date w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
+
     def __init__(self, *args, **kwargs):
         """
         Filters the 'user' queryset to only show users with the 'student'
@@ -17,11 +22,14 @@ class StudentForm(forms.ModelForm):
             student_profile__isnull=True
         )
         
-        # Apply Tailwind classes to all fields to match the project's style
+        # Apply Tailwind classes to all fields
         for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-ring focus:border-primary transition-all'
-            })
+            if isinstance(field.widget, forms.DateInput):
+                 field.widget.attrs.update({'class': self.FORM_DATE_CLASSES})
+            elif isinstance(field.widget, forms.Select):
+                 field.widget.attrs.update({'class': self.FORM_SELECT_CLASSES})
+            else:
+                 field.widget.attrs.update({'class': self.FORM_INPUT_CLASSES})
 
     class Meta:
         model = Student

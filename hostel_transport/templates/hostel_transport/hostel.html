@@ -7,27 +7,37 @@
 <div class="bg-card rounded-2xl shadow-lg border border-border overflow-hidden animate-fade-in-up">
     <div class="border-b border-border">
         <div class="flex flex-wrap space-x-1 px-4">
-            <button class="tab-button px-4 py-3 border-b-2 border-primary text-primary font-semibold text-sm flex items-center gap-2">
+            <a href="?tab=hostels" class="tab-button px-4 py-3 border-b-2 font-semibold text-sm flex items-center gap-2
+              {% if active_tab == 'hostels' %}border-primary text-primary{% else %}border-transparent text-muted-foreground hover:border-border hover:text-foreground{% endif %}">
               <i data-lucide="building" class="w-4 h-4"></i>
               Hostels
-            </button>
-            <button class="tab-button px-4 py-3 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm flex items-center gap-2">
+            </a>
+            <a href="?tab=rooms" class="tab-button px-4 py-3 border-b-2 font-semibold text-sm flex items-center gap-2
+              {% if active_tab == 'rooms' %}border-primary text-primary{% else %}border-transparent text-muted-foreground hover:border-border hover:text-foreground{% endif %}">
               <i data-lucide="bed-double" class="w-4 h-4"></i>
               Rooms
-            </button>
-            <button class="tab-button px-4 py-3 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm flex items-center gap-2">
+            </a>
+            <a href="?tab=allocations" class="tab-button px-4 py-3 border-b-2 font-semibold text-sm flex items-center gap-2
+              {% if active_tab == 'allocations' %}border-primary text-primary{% else %}border-transparent text-muted-foreground hover:border-border hover:text-foreground{% endif %}">
               <i data-lucide="user-check" class="w-4 h-4"></i>
               Allocations
-            </button>
-            <button class="tab-button px-4 py-3 border-b-2 border-transparent text-muted-foreground hover:border-border hover:text-foreground font-medium text-sm flex items-center gap-2">
+            </a>
+            <a href="?tab=routes" class="tab-button px-4 py-3 border-b-2 font-semibold text-sm flex items-center gap-2
+              {% if active_tab == 'routes' %}border-primary text-primary{% else %}border-transparent text-muted-foreground hover:border-border hover:text-foreground{% endif %}">
               <i data-lucide="bus" class="w-4 h-4"></i>
               Transport Routes
-            </button>
+            </a>
+            <a href="?tab=assignments" class="tab-button px-4 py-3 border-b-2 font-semibold text-sm flex items-center gap-2
+              {% if active_tab == 'assignments' %}border-primary text-primary{% else %}border-transparent text-muted-foreground hover:border-border hover:text-foreground{% endif %}">
+              <i data-lucide="clipboard-user" class="w-4 h-4"></i>
+              Transport Assignments
+            </a>
         </div>
     </div>
 
+    {% if active_tab == 'hostels' %}
     <div class="p-4 space-y-4">
-        {% if user.role == 'admin' or user.role == 'faculty' %}
+        {% if user.role == 'admin' %}
         <div class="flex justify-end gap-3">
            <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
                 <i data-lucide="plus" class="w-4 h-4"></i> Add Hostel
@@ -44,52 +54,235 @@
                         <th class="p-4 font-medium text-muted-foreground">Rooms (Occupied/Total)</th>
                         <th class="p-4 font-medium text-muted-foreground">Warden</th>
                         <th class="p-4 font-medium text-muted-foreground">Contact</th>
-                        {% if user.role == 'admin' or user.role == 'faculty' %}
+                        {% if user.role == 'admin' %}
                         <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
                         {% endif %}
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-border">
-                    
+                    {% for hostel in hostels %}
                     <tr class="table-row stagger-table-row">
-                        <td class="p-4 font-medium text-foreground">A Block Hostel</td>
-                        <td class="p-4 text-muted-foreground">Boys</td>
-                        <td class="p-4 text-muted-foreground">85 / 100</td>
-                        <td class="p-4 text-muted-foreground">Mr. Sharma</td>
-                        <td class="p-4 text-muted-foreground">9876543210</td>
-                        {% if user.role == 'admin' or user.role == 'faculty' %}
+                        <td class="p-4 font-medium text-foreground">{{ hostel.name }}</td>
+                        <td class="p-4 text-muted-foreground capitalize">{{ hostel.type }}</td>
+                        <td class="p-4 text-muted-foreground">{{ hostel.occupied_rooms }} / {{ hostel.total_rooms|default:"N/A" }}</td>
+                        <td class="p-4 text-muted-foreground">{{ hostel.warden|default:"N/A" }}</td>
+                        <td class="p-4 text-muted-foreground">{{ hostel.contact_number|default:"N/A" }}</td>
+                        {% if user.role == 'admin' %}
                         <td class="p-4 flex justify-end gap-2">
-                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="eye" class="w-4 h-4"></i></button>
                             <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
                             <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-destructive hover:scale-110"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                         {% endif %}
                     </tr>
-                    
-                    <tr class="table-row stagger-table-row">
-                        <td class="p-4 font-medium text-foreground">B Block Hostel</td>
-                        <td class="p-4 text-muted-foreground">Girls</td>
-                        <td class="p-4 text-muted-foreground">110 / 120</td>
-                        <td class="p-4 text-muted-foreground">Ms. Gupta</td>
-                        <td class="p-4 text-muted-foreground">9123456780</td>
-                        {% if user.role == 'admin' or user.role == 'faculty' %}
-                        <td class="p-4 flex justify-end gap-2">
-                             <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-destructive hover:scale-110"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </td>
-                        {% endif %}
+                    {% empty %}
+                    <tr>
+                      <td colspan="6" class="p-4 text-center text-muted-foreground">No hostels found.</td>
                     </tr>
-                    
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="pt-4 border-t border-border flex items-center justify-between">
-            <p class="text-sm text-muted-foreground">Showing <strong>2</strong> to <strong>2</strong> results</p>
-            <div class="flex gap-2">
-                <button class="px-4 py-2 rounded-lg border border-input text-sm font-medium transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground disabled:hover:border-input" disabled>Previous</button>
-                <button class="px-4 py-2 rounded-lg border border-input text-sm font-medium transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground disabled:hover:border-input">Next</button>
-            </div>
+    </div>
+    
+    {% elif active_tab == 'rooms' %}
+    <div class="p-4 space-y-4">
+        {% if user.role == 'admin' %}
+        <div class="flex justify-end gap-3">
+           <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add Room
+            </button>
+        </div>
+        {% endif %}
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-max text-sm text-left">
+                <thead class="bg-muted border-b border-border">
+                    <tr>
+                        <th class="p-4 font-medium text-muted-foreground">Room Number</th>
+                        <th class="p-4 font-medium text-muted-foreground">Hostel</th>
+                        <th class="p-4 font-medium text-muted-foreground">Beds (Occupied/Capacity)</th>
+                        <th class="p-4 font-medium text-muted-foreground">Rent</th>
+                        <th class="p-4 font-medium text-muted-foreground">Status</th>
+                        {% if user.role == 'admin' %}
+                        <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    {% for room in rooms %}
+                    <tr class="table-row stagger-table-row">
+                        <td class="p-4 font-medium text-foreground">{{ room.room_number }}</td>
+                        <td class="p-4 text-muted-foreground">{{ room.hostel.name }}</td>
+                        <td class="p-4 text-muted-foreground">{{ room.occupied_beds }} / {{ room.capacity }}</td>
+                        <td class="p-4 text-muted-foreground">₹ {{ room.rent|default:"N/A" }}</td>
+                        <td class="p-4">
+                          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-gray-100 dark:bg-gray-500/10 text-gray-700 dark:text-gray-400 border border-gray-200 dark:border-gray-500/30 capitalize">{{ room.status }}</span>
+                        </td>
+                        {% if user.role == 'admin' %}
+                        <td class="p-4 flex justify-end gap-2">
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="p-4 text-center text-muted-foreground">No rooms found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {% elif active_tab == 'allocations' %}
+    <div class="p-4 space-y-4">
+        {% if user.role == 'admin' %}
+        <div class="flex justify-end gap-3">
+           <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
+                <i data-lucide="plus" class="w-4 h-4"></i> New Allocation
+            </button>
+        </div>
+        {% endif %}
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-max text-sm text-left">
+                <thead class="bg-muted border-b border-border">
+                    <tr>
+                        <th class="p-4 font-medium text-muted-foreground">Student</th>
+                        <th class="p-4 font-medium text-muted-foreground">Hostel</th>
+                        <th class="p-4 font-medium text-muted-foreground">Room</th>
+                        <th class="p-4 font-medium text-muted-foreground">Allocation Date</th>
+                        <th class="p-4 font-medium text-muted-foreground">Status</th>
+                        {% if user.role == 'admin' %}
+                        <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    {% for alloc in allocations %}
+                    <tr class="table-row stagger-table-row">
+                        <td class="p-4 font-medium text-foreground">{{ alloc.student.user.first_name }} {{ alloc.student.user.last_name }}</td>
+                        <td class="p-4 text-muted-foreground">{{ alloc.room.hostel.name }}</td>
+                        <td class="p-4 text-muted-foreground">{{ alloc.room.room_number }}</td>
+                        <td class="p-4 text-muted-foreground">{{ alloc.allocation_date|date:"Y-m-d" }}</td>
+                        <td class="p-4">
+                          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-500/30 capitalize">{{ alloc.status }}</span>
+                        </td>
+                        {% if user.role == 'admin' %}
+                        <td class="p-4 flex justify-end gap-2">
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="p-4 text-center text-muted-foreground">No allocations found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% elif active_tab == 'routes' %}
+    <div class="p-4 space-y-4">
+        {% if user.role == 'admin' %}
+        <div class="flex justify-end gap-3">
+           <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add Route
+            </button>
+        </div>
+        {% endif %}
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-max text-sm text-left">
+                <thead class="bg-muted border-b border-border">
+                    <tr>
+                        <th class="p-4 font-medium text-muted-foreground">Route Name</th>
+                        <th class="p-4 font-medium text-muted-foreground">Source</th>
+                        <th class="p-4 font-medium text-muted-foreground">Destination</th>
+                        <th class="p-4 font-medium text-muted-foreground">Vehicle</th>
+                        <th class="p-4 font-medium text-muted-foreground">Driver</th>
+                        <th class="p-4 font-medium text-muted-foreground">Fare</th>
+                        {% if user.role == 'admin' %}
+                        <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    {% for route in routes %}
+                    <tr class="table-row stagger-table-row">
+                        <td class="p-4 font-medium text-foreground">{{ route.route_name }}</td>
+                        <td class="p-4 text-muted-foreground">{{ route.source|default:"N/A" }}</td>
+                        <td class="p-4 text-muted-foreground">{{ route.destination|default:"N/A" }}</td>
+                        <td class="p-4 text-muted-foreground">{{ route.vehicle_number|default:"N/A" }}</td>
+                        <td class="p-4 text-muted-foreground">{{ route.driver_name|default:"N/A" }}</td>
+                        <td class="p-4 text-muted-foreground">₹ {{ route.fare|default:"N/A" }}</td>
+                        {% if user.role == 'admin' %}
+                        <td class="p-4 flex justify-end gap-2">
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="p-4 text-center text-muted-foreground">No routes found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {% elif active_tab == 'assignments' %}
+    <div class="p-4 space-y-4">
+        {% if user.role == 'admin' %}
+        <div class="flex justify-end gap-3">
+           <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
+                <i data-lucide="plus" class="w-4 h-4"></i> New Assignment
+            </button>
+        </div>
+        {% endif %}
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-max text-sm text-left">
+                <thead class="bg-muted border-b border-border">
+                    <tr>
+                        <th class="p-4 font-medium text-muted-foreground">Student</th>
+                        <th class="p-4 font-medium text-muted-foreground">Route</th>
+                        <th class="p-4 font-medium text-muted-foreground">Assignment Date</th>
+                        <th class="p-4 font-medium text-muted-foreground">Status</th>
+                        {% if user.role == 'admin' %}
+                        <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    {% for assign in assignments %}
+                    <tr class="table-row stagger-table-row">
+                        <td class="p-4 font-medium text-foreground">{{ assign.student.user.first_name }} {{ assign.student.user.last_name }}</td>
+                        <td class="p-4 text-muted-foreground">{{ assign.route.route_name }}</td>
+                        <td class="p-4 text-muted-foreground">{{ assign.assignment_date|date:"Y-m-d" }}</td>
+                        <td class="p-4">
+                          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-500/30 capitalize">{{ assign.status }}</span>
+                        </td>
+                        {% if user.role == 'admin' %}
+                        <td class="p-4 flex justify-end gap-2">
+                            <button class="p-2 rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-primary hover:scale-110"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="p-4 text-center text-muted-foreground">No assignments found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="p-4 border-t border-border flex items-center justify-between">
+        <p class="text-sm text-muted-foreground">Showing <strong>
+          {% if active_tab == 'hostels' %}{{ hostels|length }}
+          {% elif active_tab == 'rooms' %}{{ rooms|length }}
+          {% elif active_tab == 'allocations' %}{{ allocations|length }}
+          {% elif active_tab == 'routes' %}{{ routes|length }}
+          {% elif active_tab == 'assignments' %}{{ assignments|length }}
+          {% endif %}
+        </strong> results</p>
+        <div class="flex gap-2">
+            <button class="px-4 py-2 rounded-lg border border-input text-sm font-medium transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground disabled:hover:border-input" disabled>Previous</button>
+            <button class="px-4 py-2 rounded-lg border border-input text-sm font-medium transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground disabled:hover:border-input">Next</button>
         </div>
     </div>
 </div>

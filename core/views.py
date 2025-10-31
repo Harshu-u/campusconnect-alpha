@@ -7,6 +7,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages # Import messages
 
+# --- Import models for Dashboard ---
+from students.models import Student
+from faculty.models import Faculty
+from courses.models import Course
+from attendance.models import Attendance
+from django.db.models import Count, Case, When, FloatField
+# --- End Dashboard Imports ---
+
+
 # View for the public landing page
 def landing_view(request):
     if request.user.is_authenticated:
@@ -16,8 +25,28 @@ def landing_view(request):
 # View for the dashboard (requires login)
 @login_required
 def dashboard_view(request):
-    # We will make this dynamic in Phase 5
-    context = {} 
+    # --- Get Main Statistics ---
+    student_count = Student.objects.count()
+    faculty_count = Faculty.objects.count()
+    course_count = Course.objects.count()
+
+    # --- Calculate Attendance Rate ---
+    # We count 'present' and 'late' as "attended"
+    total_records = Attendance.objects.count()
+    present_records = Attendance.objects.filter(status__in=['present', 'late']).count()
+    
+    attendance_rate = 0.0
+    if total_records > 0:
+        # Calculate percentage and round to 1 decimal place
+        attendance_rate = round((present_records / total_records) * 100, 1)
+
+    # We will make the charts dynamic in a future step!
+    context = {
+        'student_count': student_count,
+        'faculty_count': faculty_count,
+        'course_count': course_count,
+        'attendance_rate': attendance_rate,
+    } 
     return render(request, 'core/dashboard.html', context)
 
 # View for registration (with APPROVAL LOGIC)

@@ -13,7 +13,7 @@
       <div>
         <p class="text-muted-foreground text-sm font-medium">Total Students</p>
         <p class="text-2xl font-bold text-foreground" data-testid="stat-students-value">
-          1,250
+          {{ student_count|default:"0" }}
         </p>
         <p class="text-xs text-green-500">+5.2% from last month</p>
       </div>
@@ -28,7 +28,7 @@
       <div>
         <p class="text-muted-foreground text-sm font-medium">Total Faculty</p>
         <p class="text-2xl font-bold text-foreground" data-testid="stat-faculty-value">
-          150
+          {{ faculty_count|default:"0" }}
         </p>
         <p class="text-xs text-green-500">+2.1% from last month</p>
       </div>
@@ -43,7 +43,7 @@
       <div>
         <p class="text-muted-foreground text-sm font-medium">Total Courses</p>
         <p class="text-2xl font-bold text-foreground" data-testid="stat-courses-value">
-          80
+          {{ course_count|default:"0" }}
         </p>
         <p class="text-xs text-green-500">+10 new this semester</p>
       </div>
@@ -58,7 +58,7 @@
       <div>
         <p class="text-muted-foreground text-sm font-medium">Attendance Rate</p>
         <p class="text-2xl font-bold text-foreground" data-testid="stat-attendance-value">
-          92.5%
+          {{ attendance_rate|default:"0.0" }}%
         </p>
         <p class="text-xs text-green-500">+1.5% from last week</p>
       </div>

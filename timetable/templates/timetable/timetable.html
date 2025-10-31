@@ -5,94 +5,78 @@
 
 {% block content %}
 <div class="bg-card p-6 rounded-2xl shadow-lg border border-border mb-6 animate-fade-in-up">
-  <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-    <div class="flex flex-wrap gap-3">
-      <select class="form-select py-2 px-4 rounded-lg">
-        <option value="">Select Department</option>
-        <option value="cs" selected>Computer Science</option>
-        <option value="eng">Engineering</option>
-      </select>
-      <select class="form-select py-2 px-4 rounded-lg">
-        <option value="">Select Year</option>
-        <option value="1" selected>Year 1</option>
-        <option value="2">Year 2</option>
-      </select>
-       <select class="form-select py-2 px-4 rounded-lg">
-        <option value="">Select Semester</option>
-        <option value="1" selected>Sem 1</option>
-        <option value="2">Sem 2</option>
-      </select>
+  <form method="GET" action="{% url 'timetable:timetable' %}">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex flex-wrap gap-3">
+        <select name="department" class="form-select py-2 px-4 rounded-lg">
+          <option value="">Select Department</option>
+          {% for dept in departments %}
+          <option value="{{ dept.id }}" {% if dept_query == dept.id|slugify %}selected{% endif %}>
+            {{ dept.name }}
+          </option>
+          {% endfor %}
+        </select>
+        <select name="year" class="form-select py-2 px-4 rounded-lg">
+          <option value="">Select Year</option>
+          <option value="1" {% if year_query == '1' %}selected{% endif %}>Year 1</option>
+          <option value="2" {% if year_query == '2' %}selected{% endif %}>Year 2</option>
+          <option value="3" {% if year_query == '3' %}selected{% endif %}>Year 3</option>
+          <option value="4" {% if year_query == '4' %}selected{% endif %}>Year 4</option>
+        </select>
+        <select name="semester" class="form-select py-2 px-4 rounded-lg">
+          <option value="">Select Semester</option>
+          <option value="1" {% if sem_query == '1' %}selected{% endif %}>Sem 1</option>
+          <option value="2" {% if sem_query == '2' %}selected{% endif %}>Sem 2</option>
+        </select>
+        <button type="submit" class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
+          <i data-lucide="filter" class="w-4 h-4"></i> Filter
+        </button>
+      </div>
+      
+      {% if user.role == 'admin' or user.role == 'faculty' %}
+      <div class="flex gap-3">
+        <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Timetable Entry
+        </button>
+      </div>
+      {% endif %}
+      
     </div>
-    
-    {% if user.role == 'admin' or user.role == 'faculty' %}
-    <div class="flex gap-3">
-      <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
-        <i data-lucide="plus" class="w-4 h-4"></i> Add Timetable Entry
-      </button>
-    </div>
-    {% endif %}
-    
-  </div>
+  </form>
 </div>
 
 <div class="bg-card rounded-2xl shadow-lg border border-border overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
   <div class="p-4 border-b border-border">
     <h3 class="text-lg font-semibold text-foreground">Weekly Timetable</h3>
-    <p class="text-sm text-muted-foreground">Department: Computer Science, Year: 1, Semester: 1</p> 
+    <p class="text-sm text-muted-foreground">
+      Department: {{ selected_dept_name }}, Year: {{ year_query }}, Semester: {{ sem_query }}
+    </p> 
   </div>
   
   <div class="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-border"> 
     
-    {% for day in days_of_week %}
-      <div class="flex-1">
+    {% for day_name, entries in timetable_data.items %}
+      <div classTA="flex-1">
         <div class="bg-muted p-3 font-semibold text-center text-sm text-foreground border-b border-border">
-          {{ day }}
+          {{ day_name }}
         </div>
         <div class="p-3 space-y-3 min-h-[200px]">
           
-          {% if day == "Monday" %}
+          {% for entry in entries %}
           <div class="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 p-3 rounded-lg text-xs shadow-sm stagger-animation">
-            <p class="font-bold text-blue-800 dark:text-blue-300">09:00 - 10:00</p>
-            <p class="font-semibold text-blue-700 dark:text-blue-400 my-1">CS101 - Intro to Programming</p>
-            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i>Room: A101</p>
-            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i>Dr. Turing</p>
+            <p class="font-bold text-blue-800 dark:text-blue-300">{{ entry.start_time|time:"H:i" }} - {{ entry.end_time|time:"H:i" }}</p>
+            <p class="font-semibold text-blue-700 dark:text-blue-400 my-1">{{ entry.course.course_code }} - {{ entry.course.name }}</p>
+            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i>Room: {{ entry.room }}</p>
+            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i>{{ entry.faculty.user.first_name|default:'' }} {{ entry.faculty.user.last_name|default:'' }}</p>
           </div>
-           <div class="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 p-3 rounded-lg text-xs shadow-sm stagger-animation" style="animation-delay: 100ms;">
-            <p class="font-bold text-green-800 dark:text-green-300">11:00 - 12:00</p>
-            <p class="font-semibold text-green-700 dark:text-green-400 my-1">MA101 - Calculus I</p>
-            <p class="text-green-600 dark:text-green-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i>Room: B203</p>
-            <p class="text-green-600 dark:text-green-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i>Dr. Newton</p>
-          </div>
-          {% endif %}
+          {% empty %}
+          <p class="text-xs text-muted-foreground text-center pt-4">No classes scheduled.</p>
+          {% endfor %}
           
-          {% if day == "Tuesday" %}
-           <div class="bg-yellow-50 dark:bg-yellow-500/10 border border-yellow-200 dark:border-yellow-500/30 p-3 rounded-lg text-xs shadow-sm stagger-animation" style="animation-delay: 200ms;">
-            <p class="font-bold text-yellow-800 dark:text-yellow-300">10:00 - 11:00</p>
-            <p class="font-semibold text-yellow-700 dark:text-yellow-400 my-1">PH101 - Physics I</p>
-            <p class="text-yellow-600 dark:text-yellow-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i>Room: C105</p>
-            <p class="text-yellow-600 dark:text-yellow-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i>Dr. Einstein</p>
-          </div>
-          {% endif %}
-          
-          {% if day == "Wednesday" %}
-           <div class="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 p-3 rounded-lg text-xs shadow-sm stagger-animation" style="animation-delay: 300ms;">
-            <p class="font-bold text-blue-800 dark:text-blue-300">09:00 - 10:00</p>
-            <p class="font-semibold text-blue-700 dark:text-blue-400 my-1">CS101 - Intro to Programming</p>
-            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i>Room: A101</p>
-            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i>Dr. Turing</p>
-          </div>
-          {% endif %}
-          
-          {% if day == "Thursday" %}
-           <div class="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 p-3 rounded-lg text-xs shadow-sm stagger-animation" style="animation-delay: 400ms;">
-            <p class="font-bold text-green-800 dark:text-green-300">11:00 - 12:00</p>
-            <p class="font-semibold text-green-700 dark:text-green-400 my-1">MA101 - Calculus I</p>
-            <p class="text-green-600 dark:text-green-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i>Room: B203</p>
-            <p class="text-green-600 dark:text-green-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i>Dr. Newton</p>
-          </div>
-          {% endif %}
-          
-          {% if day == "Friday" %}
-            <div class="bg-yellow-50 dark:bg-yellow-500/10 border border-yellow-200 dark:border-yellow-500/30 p-3 rounded-lg text-xs shadow-sm stagger-animation" style="animation-delay: 500ms;">
-            <p class="font-bold text-yellow-800 dark:text-yellow-300">10:00 - 11:00</p>
-            <p class="font-semibold text-yellow-7
+        </div>
+      </div>
+    {% endfor %}
+    
+  </div>
+</div>
+{% endblock %}

@@ -308,7 +308,7 @@
             </li>
             {% endif %}
 
-            {% if user.role == 'admin' %}
+            {% if user.role == 'admin' or user.role == 'faculty' %}
             <li>
               <a
                 href="{% url 'faculty' %}"

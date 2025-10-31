@@ -5,7 +5,7 @@ from .forms import FacultyForm # 1. Import the new form
 
 @login_required
 def faculty_view(request):
-    if not request.user.role == 'admin':
+    if not (request.user.role == 'admin' or request.user.role == 'faculty'):
         return redirect('dashboard')
         
     faculty_list = Faculty.objects.select_related('user', 'department').all()

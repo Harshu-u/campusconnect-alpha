@@ -5,7 +5,7 @@
 {% block page_title %}{{ form_title|default:"Student Form" }}{% endblock %}
 
 {% block content %}
-<div class="bg-card p-6 rounded-lg shadow-sm max-w-2xl mx-auto">
+<div class="bg-card p-6 rounded-lg shadow-sm max-w-2xl mx-auto transition-all duration-300 hover:shadow-lg">
   <form method="post">
     {% csrf_token %}
     
@@ -38,7 +38,7 @@
         <i data-lucide="save" class="w-4 h-4"></i>
         Save Student
       </button>
-      <a href="{% url 'students' %}" class="text-sm text-muted-foreground hover:underline">
+      <a href="{% url 'students' %}" class="text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:underline">
         Cancel
       </a>
     </div>

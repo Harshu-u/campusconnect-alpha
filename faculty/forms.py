@@ -21,7 +21,7 @@ class FacultyForm(forms.ModelForm):
         # Apply Tailwind classes to all fields
         for field_name, field in self.fields.items():
             field.widget.attrs.update({
-                'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm'
+                'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-ring focus:border-primary transition-all'
             })
 
     class Meta:

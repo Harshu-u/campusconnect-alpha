@@ -10,14 +10,14 @@ class CustomUserCreationForm(UserCreationForm):
         # ('admin', 'Admin'), # Optionally comment out to prevent random admin signups
     )
     role = forms.ChoiceField(choices=ROLE_CHOICES, required=True, 
-                             widget=forms.Select(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm'}))
+                             widget=forms.Select(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-ring focus:border-primary transition-all'}))
     
     first_name = forms.CharField(max_length=100, required=True, 
-                                 widget=forms.TextInput(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm'}))
+                                 widget=forms.TextInput(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-ring focus:border-primary transition-all'}))
     last_name = forms.CharField(max_length=100, required=True, 
-                                widget=forms.TextInput(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm'}))
+                                widget=forms.TextInput(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-ring focus:border-primary transition-all'}))
     email = forms.EmailField(required=True, 
-                             widget=forms.EmailInput(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm'}))
+                             widget=forms.EmailInput(attrs={'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-ring focus:border-primary transition-all'}))
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -29,5 +29,5 @@ class CustomUserCreationForm(UserCreationForm):
         for fieldname in ['username', 'password1', 'password2']:
             if fieldname in self.fields:
                 self.fields[fieldname].widget.attrs.update({
-                    'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring'
+                    'class': 'w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-ring focus:border-primary transition-all'
                 })

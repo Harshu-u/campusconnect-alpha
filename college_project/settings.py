@@ -1,3 +1,6 @@
+# --- File: college_project/settings.py ---
+# This is the full and correct file.
+
 """
 Django settings for college_project project.
 
@@ -31,19 +34,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'core', # For User model, dashboard, landing page
-
-    # Our new apps
-    'students',
-    'faculty',
-    'courses',
-    'attendance',
-    'exams',
-    'library',
-    'fees',
-    'hostel_transport',
-    'sports',
-
     # Django built-ins
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +41,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Our core app
+    'core', # For User model, dashboard, landing page
+
+    # Our new apps
+    'students',
+    'faculty',
+    'courses',
+    'timetable',
+    'attendance',
+    'exams',
+    'library',
+    'fees',
+    'hostel_transport',
+    'sports',
 ]
 
 MIDDLEWARE = [
@@ -86,10 +91,15 @@ WSGI_APPLICATION = 'college_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# YOUR NEW POSTGRESQL DATABASE CONFIGURATION
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'campusconnect_db',     # The DB name you created
+        'USER': 'campus_admin',        # The user you created
+        'PASSWORD': '4@hps',             # The password you set
+        'HOST': 'localhost',             # Or '127.0.0.1'
+        'PORT': '5432',                  # Default PostgreSQL port
     }
 }
 
@@ -114,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+# https://docs.djangoproject.com/en/5.2/topics/i1n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -134,32 +144,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# At the very bottom of college_project/settings.py
 
+# Custom User Model and Redirects
 AUTH_USER_MODEL = 'core.User'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
-INSTALLED_APPS = [
-    # Django built-ins
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    # Our core app
-    'core', # For User model, dashboard, landing page
-
-    # Our new apps
-    'students',
-    'faculty',
-    'courses',
-    'timetable', # Make sure you added this from our last step!
-    'attendance',
-    'exams',
-    'library',
-    'fees',
-    'hostel_transport',
-    'sports',
-]

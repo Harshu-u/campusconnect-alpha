@@ -1,11 +1,9 @@
 {% extends "core/base.html" %}
 
 {% block title %}Timetable{% endblock %}
-
 {% block page_title %}Timetable{% endblock %}
 
 {% block content %}
-
 <div class="bg-card p-4 rounded-lg shadow-sm mb-6">
   <div class="flex flex-col md:flex-row justify-between items-center gap-4">
     <div class="flex flex-wrap gap-2">
@@ -13,7 +11,7 @@
         <option value="">Select Department</option>
         <option value="cs">Computer Science</option>
         <option value="eng">Engineering</option>
-        </select>
+      </select>
       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
         <option value="">Select Year</option>
         <option value="1">Year 1</option>
@@ -25,13 +23,17 @@
         <option value="">Select Semester</option>
         <option value="1">Sem 1</option>
         <option value="2">Sem 2</option>
-        </select>
+      </select>
     </div>
+    
+    {% if user.role == 'admin' or user.role == 'faculty' %}
     <div class="flex gap-2">
       <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
         <i data-lucide="plus" class="w-4 h-4"></i> Add Timetable Entry
       </button>
     </div>
+    {% endif %}
+    
   </div>
 </div>
 
@@ -92,15 +94,4 @@
     </div>
   </div>
 </div>
-
-{% endblock %}
-
-{% block extra_context %}
-{# This provides the list of days for the table header loop #}
-<script>
-  window.djangoContext = {
-    days_of_week: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] 
-    // Assuming 5-day week for now, adjust if needed
-  };
-</script>
 {% endblock %}

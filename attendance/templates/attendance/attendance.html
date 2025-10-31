@@ -1,40 +1,36 @@
 {% extends "core/base.html" %}
 
 {% block title %}Attendance{% endblock %}
-
 {% block page_title %}Attendance{% endblock %}
 
 {% block content %}
-
 <div class="bg-card p-4 rounded-lg shadow-sm mb-6">
   <div class="flex flex-col md:flex-row justify-between items-center gap-4">
     <div class="flex flex-wrap gap-2">
-      <input 
-        type="date" 
-        value="{{ today_date }}" {# We'll need to pass today's date from the view later #}
-        class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground"
-      />
+      <input type="date" value="{{ today_date }}" class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground" />
       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
         <option value="">Select Course</option>
         <option value="cs101">CS101 - Intro to Programming</option>
         <option value="ma101">MA101 - Calculus I</option>
-        </select>
+      </select>
        <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
         <option value="">Select Student</option>
         <option value="s12345">Jane Doe (S12345)</option>
         <option value="s12346">John Smith (S12346)</option>
-        </select>
+      </select>
     </div>
+    
+    {% if user.role == 'admin' or user.role == 'faculty' %}
     <div class="flex gap-2">
       <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
         <i data-lucide="edit" class="w-4 h-4"></i> Mark Attendance
       </button>
     </div>
+    {% endif %}
+    
   </div>
 </div>
-
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  
   <div class="lg:col-span-1">
      <div class="bg-card p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-foreground mb-4">Attendance Summary</h3>
@@ -54,13 +50,11 @@
           </div>
      </div>
   </div>
-
   <div class="lg:col-span-2">
     <div class="bg-card rounded-lg shadow-sm overflow-hidden">
       <div class="p-4 border-b border-border">
         <h3 class="text-lg font-semibold text-foreground">Attendance Records</h3>
         <p class="text-sm text-muted-foreground">Date: October 29, 2025</p> </div>
-      
       <div class="divide-y divide-border">
         <div class="p-4">
           <h4 class="font-medium text-foreground mb-2">CS101 - Intro to Programming</h4>
@@ -81,7 +75,6 @@
             </div>
              </div>
         </div>
-        
          <div class="p-4">
           <h4 class="font-medium text-foreground mb-2">MA101 - Calculus I</h4>
           <div class="space-y-2">
@@ -105,5 +98,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}

@@ -28,6 +28,8 @@
         <option value="4">Year 4</option>
       </select>
     </div>
+    
+    {% if user.role == 'admin' or user.role == 'faculty' %}
     <div class="flex gap-2">
       <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
         <i data-lucide="upload" class="w-4 h-4"></i>
@@ -41,6 +43,8 @@
         Add Student
       </a>
     </div>
+    {% endif %}
+    
   </div>
 </div>
 
@@ -55,7 +59,10 @@
           <th class="p-4 font-medium text-muted-foreground">Year</th>
           <th class="p-4 font-medium text-muted-foreground">Email</th>
           <th class="p-4 font-medium text-muted-foreground">Status</th>
+          
+          {% if user.role == 'admin' or user.role == 'faculty' %}
           <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody class="divide-y divide-border">
@@ -75,14 +82,22 @@
               <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 capitalize">{{ student.status }}</span>
             {% endif %}
           </td>
+          
+          {% if user.role == 'admin' or user.role == 'faculty' %}
           <td class="p-4 flex justify-end gap-2">
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="eye" class="w-4 h-4"></i></button>
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
           </td>
+          {% endif %}
+          
         </tr>
         {% empty %}
         <tr class="table-row">
-          <td colspan="7" class="p-4 text-center text-muted-foreground">No students found.</td>
+          {% if user.role == 'admin' or user.role == 'faculty' %}
+            <td colspan="7" class="p-4 text-center text-muted-foreground">No students found.</td>
+          {% else %}
+            <td colspan="6" class="p-4 text-center text-muted-foreground">No students found.</td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>

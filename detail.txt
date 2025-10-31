@@ -4,7 +4,7 @@ Frontend: HTML, CSS, JavaScript (Bootstrap allowed for styling)
 
 Backend: Python Django
 
-Database: MySQL or postgre any which will be good
+Database: pgadmin 4 v9.9 postgre 18 
 
 Environment: The project should be runnable in Docker with Docker Compose (one container for Django backend, one for MySQL database).
 

@@ -21,6 +21,8 @@
         <option value="">All Departments</option>
         </select>
     </div>
+    
+    {% if user.role == 'admin' %}
     <div class="flex gap-2">
       <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
         <i data-lucide="upload" class="w-4 h-4"></i>
@@ -34,6 +36,8 @@
         Add Faculty
       </a>
     </div>
+    {% endif %}
+    
   </div>
 </div>
 
@@ -70,7 +74,10 @@
           </td>
           <td class="p-4 flex justify-end gap-2">
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="eye" class="w-4 h-4"></i></button>
+            
+            {% if user.role == 'admin' %}
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
+            {% endif %}
           </td>
         </tr>
         {% empty %}

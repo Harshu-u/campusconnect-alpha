@@ -31,6 +31,8 @@
               primary: {
                 DEFAULT: "var(--primary)",
                 foreground: "var(--primary-foreground)",
+                /* NEW: Add a dark variant for gradients */
+                dark: "var(--primary-dark)", 
               },
               secondary: {
                 DEFAULT: "var(--secondary)",
@@ -83,10 +85,18 @@
                 from: { height: "var(--radix-accordion-content-height)" },
                 to: { height: "0" },
               },
+              /* NEW: Keyframes for the gradient animation */
+              "gradient-animation": {
+                "0%": { backgroundPosition: "0% 50%" },
+                "50%": { backgroundPosition: "100% 50%" },
+                "100%": { backgroundPosition: "0% 50%" },
+              },
             },
             animation: {
               "accordion-down": "accordion-down 0.2s ease-out",
               "accordion-up": "accordion-up 0.2s ease-out",
+              /* NEW: Animation definition */
+              "gradient-pulse": "gradient-animation 8s ease-in-out infinite",
             },
           },
         },
@@ -104,6 +114,7 @@
         --popover: hsl(0, 0%, 100%);
         --popover-foreground: hsl(222, 84%, 5%);
         --primary: hsl(210, 100%, 50%);
+        --primary-dark: hsl(260, 100%, 55%); /* NEW Violet Color */
         --primary-foreground: hsl(210, 40%, 98%);
         --secondary: hsl(186, 100%, 38%);
         --secondary-foreground: hsl(210, 40%, 98%);
@@ -157,6 +168,7 @@
         --popover: hsl(0, 0%, 0%);
         --popover-foreground: hsl(200, 6.6667%, 91.1765%);
         --primary: hsl(203.7736, 87.6033%, 52.549%);
+        --primary-dark: hsl(260, 80%, 60%); /* NEW Violet for dark mode */
         --primary-foreground: hsl(0, 0%, 100%);
         --secondary: hsl(195, 15.3846%, 94.902%);
         --secondary-foreground: hsl(210, 25%, 7.8431%);
@@ -169,19 +181,6 @@
         --border: hsl(210, 5.2632%, 14.902%);
         --input: hsl(207.6923, 27.6596%, 18.4314%);
         --ring: hsl(202.8169, 89.1213%, 53.1373%);
-        --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
-        --chart-2: hsl(159.7826, 100%, 36.0784%);
-        --chart-3: hsl(42.029, 92.8251%, 56.2745%);
-        --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
-        --chart-5: hsl(341.4894, 75.2%, 50.9804%);
-        --sidebar: hsl(228, 9.8039%, 10%);
-        --sidebar-foreground: hsl(0, 0%, 85.098%);
-        --sidebar-primary: hsl(202.8169, 89.1213%, 53.1373%);
-        --sidebar-primary-foreground: hsl(0, 0%, 100%);
-        --sidebar-accent: hsl(205.7143, 70%, 7.8431%);
-        --sidebar-accent-foreground: hsl(203.7736, 87.6033%, 52.549%);
-        --sidebar-border: hsl(205.7143, 15.7895%, 26.0784%);
-        --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
       }
       body {
         font-family: var(--font-sans), system-ui, sans-serif;
@@ -191,6 +190,29 @@
       .sidebar-active {
         background-color: var(--primary);
         color: var(--primary-foreground);
+      }
+      
+      /* NEW: Bug fix and Style Overhaul for this page
+      */
+      .btn-primary {
+        color: var(--primary-foreground);
+        /* Apply the animated gradient */
+        background: linear-gradient(
+          60deg, 
+          var(--primary), 
+          var(--primary-dark), 
+          var(--primary)
+        );
+        background-size: 300% 300%;
+        animation: gradient-animation 8s ease-in-out infinite;
+        
+        /* Add transitions for hover */
+        transition: all 0.3s ease-in-out;
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
       }
     </style>
 </head>

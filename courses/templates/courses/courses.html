@@ -1,27 +1,21 @@
 {% extends "core/base.html" %}
 
 {% block title %}Courses{% endblock %}
-
 {% block page_title %}Courses{% endblock %}
 
 {% block content %}
-
 <div class="bg-card p-4 rounded-lg shadow-sm mb-6">
   <div class="flex flex-col md:flex-row justify-between items-center gap-4">
     <div class="relative w-full md:w-1/3">
       <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
-      <input 
-        type="text" 
-        placeholder="Search courses..." 
-        class="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background text-sm"
-      />
+      <input type="text" placeholder="Search courses..." class="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background text-sm" />
     </div>
     <div class="flex flex-wrap gap-2">
       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
         <option value="">All Departments</option>
         <option value="cs">Computer Science</option>
         <option value="eng">Engineering</option>
-        </select>
+      </select>
       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
         <option value="">All Years</option>
         <option value="1">Year 1</option>
@@ -29,12 +23,14 @@
         <option value="3">Year 3</option>
         <option value="4">Year 4</option>
       </select>
-       <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
+      <select class="py-2 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground">
         <option value="">All Semesters</option>
         <option value="1">Sem 1</option>
         <option value="2">Sem 2</option>
-        </select>
+      </select>
     </div>
+    
+    {% if user.role == 'admin' or user.role == 'faculty' %}
     <div class="flex gap-2">
       <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium">
         <i data-lucide="upload" class="w-4 h-4"></i> Import
@@ -43,6 +39,8 @@
         <i data-lucide="plus" class="w-4 h-4"></i> Add Course
       </button>
     </div>
+    {% endif %}
+    
   </div>
 </div>
 
@@ -58,7 +56,9 @@
           <th class="p-4 font-medium text-muted-foreground">Year</th>
           <th class="p-4 font-medium text-muted-foreground">Semester</th>
           <th class="p-4 font-medium text-muted-foreground">Status</th>
+          {% if user.role == 'admin' or user.role == 'faculty' %}
           <th class="p-4 font-medium text-muted-foreground text-right">Actions</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody class="divide-y divide-border">
@@ -69,30 +69,30 @@
           <td class="p-4 text-muted-foreground">3</td>
           <td class="p-4 text-muted-foreground">1</td>
           <td class="p-4 text-muted-foreground">1</td>
-          <td class="p-4">
-            <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span>
-          </td>
+          <td class="p-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span></td>
+          {% if user.role == 'admin' or user.role == 'faculty' %}
           <td class="p-4 flex justify-end gap-2">
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="eye" class="w-4 h-4"></i></button>
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
             <button class="p-2 rounded-md hover:bg-muted text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
           </td>
+          {% endif %}
         </tr>
-         <tr class="table-row">
+        <tr class="table-row">
           <td class="p-4 text-foreground">EE201</td>
           <td class="p-4 font-medium text-foreground">Circuit Theory</td>
           <td class="p-4 text-muted-foreground">Engineering</td>
           <td class="p-4 text-muted-foreground">4</td>
           <td class="p-4 text-muted-foreground">2</td>
           <td class="p-4 text-muted-foreground">1</td>
-          <td class="p-4">
-            <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">Inactive</span>
-          </td>
+          <td class="p-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">Inactive</span></td>
+          {% if user.role == 'admin' or user.role == 'faculty' %}
           <td class="p-4 flex justify-end gap-2">
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="eye" class="w-4 h-4"></i></button>
             <button class="p-2 rounded-md hover:bg-muted text-muted-foreground"><i data-lucide="edit" class="w-4 h-4"></i></button>
             <button class="p-2 rounded-md hover:bg-muted text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
           </td>
+          {% endif %}
         </tr>
       </tbody>
     </table>

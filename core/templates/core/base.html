@@ -33,6 +33,7 @@
               primary: {
                 DEFAULT: "var(--primary)",
                 foreground: "var(--primary-foreground)",
+                dark: "var(--primary-dark)", 
               },
               secondary: {
                 DEFAULT: "var(--secondary)",
@@ -85,10 +86,23 @@
                 from: { height: "var(--radix-accordion-content-height)" },
                 to: { height: "0" },
               },
+              "gradient-animation": {
+                "0%": { backgroundPosition: "0% 50%" },
+                "50%": { backgroundPosition: "100% 50%" },
+                "100%": { backgroundPosition: "0% 50%" },
+              },
+              /* NEW: Keyframes for global page fade-in */
+              "fadeIn": {
+                "from": { opacity: 0, transform: "translateY(10px)" },
+                "to": { opacity: 1, transform: "translateY(0)" },
+              },
             },
             animation: {
               "accordion-down": "accordion-down 0.2s ease-out",
               "accordion-up": "accordion-up 0.2s ease-out",
+              "gradient-pulse": "gradient-animation 8s ease-in-out infinite",
+              /* NEW: Animation definition for page fade-in */
+              "fade-in-up": "fadeIn 0.5s ease-out forwards",
             },
           },
         },
@@ -96,6 +110,8 @@
     </script>
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style type="text/css">
       :root {
@@ -106,6 +122,7 @@
         --popover: hsl(0, 0%, 100%);
         --popover-foreground: hsl(222, 84%, 5%);
         --primary: hsl(210, 100%, 50%);
+        --primary-dark: hsl(260, 100%, 55%); /* NEW Violet Color */
         --primary-foreground: hsl(210, 40%, 98%);
         --secondary: hsl(186, 100%, 38%);
         --secondary-foreground: hsl(210, 40%, 98%);
@@ -135,21 +152,10 @@
         --font-serif: Georgia, serif;
         --font-mono: Menlo, monospace;
         --radius: 8px;
-        --shadow-2xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-sm: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-md: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 2px 4px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-lg: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 4px 6px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0),
-          0px 8px 10px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --shadow-2xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
-        --tracking-normal: 0em;
-        --spacing: 0.25rem;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
       }
       .dark {
         --background: hsl(0, 0%, 0%);
@@ -159,6 +165,7 @@
         --popover: hsl(0, 0%, 0%);
         --popover-foreground: hsl(200, 6.6667%, 91.1765%);
         --primary: hsl(203.7736, 87.6033%, 52.549%);
+        --primary-dark: hsl(260, 80%, 60%); /* NEW Violet for dark mode */
         --primary-foreground: hsl(0, 0%, 100%);
         --secondary: hsl(195, 15.3846%, 94.902%);
         --secondary-foreground: hsl(210, 25%, 7.8431%);
@@ -171,19 +178,6 @@
         --border: hsl(210, 5.2632%, 14.902%);
         --input: hsl(207.6923, 27.6596%, 18.4314%);
         --ring: hsl(202.8169, 89.1213%, 53.1373%);
-        --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
-        --chart-2: hsl(159.7826, 100%, 36.0784%);
-        --chart-3: hsl(42.029, 92.8251%, 56.2745%);
-        --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
-        --chart-5: hsl(341.4894, 75.2%, 50.9804%);
-        --sidebar: hsl(228, 9.8039%, 10%);
-        --sidebar-foreground: hsl(0, 0%, 85.098%);
-        --sidebar-primary: hsl(202.8169, 89.1213%, 53.1373%);
-        --sidebar-primary-foreground: hsl(0, 0%, 100%);
-        --sidebar-accent: hsl(205.7143, 70%, 7.8431%);
-        --sidebar-accent-foreground: hsl(203.7736, 87.6033%, 52.549%);
-        --sidebar-border: hsl(205.7143, 15.7895%, 26.0784%);
-        --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
       }
       body {
         font-family: var(--font-sans), system-ui, sans-serif;
@@ -194,6 +188,70 @@
         background-color: var(--primary);
         color: var(--primary-foreground);
       }
+      
+      .btn-primary {
+        color: var(--primary-foreground);
+        background: linear-gradient(
+          60deg, 
+          var(--primary), 
+          var(--primary-dark), 
+          var(--primary)
+        );
+        background-size: 300% 300%;
+        animation: gradient-animation 8s ease-in-out infinite;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .btn-primary:hover, .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+      
+      .table-row, .stat-card, nav a, button {
+         transition: all 0.2s ease-in-out;
+      }
+
+      .table-row:hover {
+        background-color: var(--muted);
+      }
+      
+      /* NEW: Sidebar icon animation */
+      nav a:hover i {
+        transform: scale(1.1) rotate(5deg);
+      }
+      nav a i {
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
+      }
+      
+      /* Styling for messages */
+      .message-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .message-item {
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.875rem; /* text-sm */
+      }
+      .message-item.success {
+        background-color: hsl(145, 63%, 92%);
+        color: hsl(145, 100%, 25%);
+        border: 1px solid hsl(145, 100%, 80%);
+      }
+      .message-item.info {
+        background-color: hsl(210, 100%, 95%);
+        color: hsl(210, 90%, 40%);
+        border: 1px solid hsl(210, 100%, 85%);
+      }
+      .message-item.error {
+        background-color: hsl(0, 100%, 97%);
+        color: hsl(0, 90%, 40%);
+        border: 1px solid hsl(0, 100%, 90%);
+      }
+
     </style>
   </head>
   <body class="bg-background text-foreground">
@@ -215,7 +273,6 @@
             </div>
           </div>
         </div>
-
         <nav class="p-4 flex-1 overflow-y-auto">
           <ul class="space-y-2">
             
@@ -234,12 +291,12 @@
               </a>
             </li>
 
-            {% if user.role == 'admin' %}
+            {% if user.role == 'admin' or user.role == 'faculty' %}
             <li>
               <a
                 href="{% url 'students' %}"
                 class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
-                       {% if request.resolver_match.url_name == 'students' %}
+                       {% if request.resolver_match.url_name == 'students' or request.resolver_match.url_name == 'add_student' %}
                          sidebar-active
                        {% else %}
                          text-foreground hover:bg-muted
@@ -256,7 +313,7 @@
               <a
                 href="{% url 'faculty' %}"
                 class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
-                       {% if request.resolver_match.url_name == 'faculty' %}
+                       {% if request.resolver_match.url_name == 'faculty' or request.resolver_match.url_name == 'add_faculty' %}
                          sidebar-active
                        {% else %}
                          text-foreground hover:bg-muted
@@ -273,7 +330,7 @@
               <a
                 href="{% url 'courses:courses' %}"
                 class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
-                       {% if request.resolver_match.url_name == 'courses' %}
+                       {% if request.resolver_match.app_name == 'courses' %}
                          sidebar-active
                        {% else %}
                          text-foreground hover:bg-muted
@@ -289,7 +346,7 @@
               <a
                 href="{% url 'timetable:timetable' %}"
                 class="flex items-center space-x-3 px-3 py-2 rounded-md transition-colors
-                       {% if request.resolver_match.url_name == 'timetable' %}
+                       {% if request.resolver_match.app_name == 'timetable' %}
                          sidebar-active
                        {% else %}
                          text-foreground hover:bg-muted
@@ -345,7 +402,6 @@
               </a>
             </li>
 
-            {% if user.role == 'admin' or user.role == 'student' %}
             <li>
               <a
                 href="{% url 'fees' %}"
@@ -358,12 +414,11 @@
               >
                 <i data-lucide="dollar-sign" class="w-5 h-5"></i>
                 <span>
-                  {% if user.role == 'admin' %}Fee Management{% else %}My Fees{% endif %}
+                  {% if user.role == 'student' %}My Fees{% else %}Fee Management{% endif %}
                 </span>
               </a>
             </li>
-            {% endif %}
-
+            
             <li>
               <a
                 href="{% url 'hostel' %}"
@@ -441,8 +496,11 @@
                 <div
                   class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-medium text-sm"
                 >
-                  {% if user.is_authenticated %} {{ user.first_name|first|upper
-                  }}{{ user.last_name|first|upper }} {% else %} G {% endif %}
+                  {% if user.is_authenticated and user.first_name and user.last_name %} 
+                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }} 
+                  {% elif user.is_authenticated %} 
+                    {{ user.username|first|upper }}
+                  {% else %} G {% endif %}
                 </div>
                 <span class="text-sm font-medium text-foreground">
                   {% if user.is_authenticated %} {{ user.first_name }} {{
@@ -453,7 +511,15 @@
           </div>
         </header>
 
-        <div class="p-6 flex-1 overflow-y-auto">
+        <div class="p-6 flex-1 overflow-y-auto animate-fade-in-up">
+          {% if messages %}
+            <ul class="message-list">
+                {% for message in messages %}
+                    <li class="message-item {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+          
           {% block content %}
           <h1 class="text-2xl font-bold">Welcome to your Django Project!</h1>
           <p class="mt-2">
@@ -468,5 +534,7 @@
     <script>
       lucide.createIcons()
     </script>
+    
+    {% block extra_js %}{% endblock %}
   </body>
 </html>

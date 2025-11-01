@@ -1,0 +1,6 @@
+student_id,email,first_name,last_name,department_name,year,semester,phone,address,guardian_name
+S-1001,aman.s@example.com,Aman,Sharma,Computer Science,1,1,9876543210,123 Main St,Rakesh Sharma
+S-1002,priya.k@example.com,Priya,Kaur,Engineering,2,3,9876543211,456 Oak Ave,Gurpreet Singh
+S-1003,rohan.v@example.com,Rohan,Verma,Business,1,1,9876543212,789 Pine Ln,Anil Verma
+S-1004,aisha.b@example.com,Aisha,Begum,Arts,3,5,9876543213,101 Maple Dr,Imran Begum
+S-1005,vikram.r@example.com,Vikram,Rao,Computer Science,2,3,9876543214,202 Birch Rd,Sunita Rao

@@ -7,6 +7,13 @@ from . import views
 urlpatterns = [
     path('', views.students_view, name='students'),
     path('add/', views.add_student_view, name='add_student'),
-    path('edit/<int:pk>/', views.edit_student_view, name='edit_student'),     # <-- ADD THIS
-    path('delete/<int:pk>/', views.delete_student_view, name='delete_student'), # <-- ADD THIS
+    path('edit/<int:pk>/', views.edit_student_view, name='edit_student'),
+    path('delete/<int:pk>/', views.delete_student_view, name='delete_student'),
+    
+    # URL for handling the Student CSV import
+    path('import/', views.import_students_csv, name='import_students'),
+    
+    # NEW: URL for handling the Department CSV import
+    path('import-departments/', views.import_departments_csv, name='import_departments'),
 ]
+

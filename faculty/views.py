@@ -4,10 +4,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Faculty
+from core.models import User # Import User
 from .forms import FacultyForm
 from students.models import Department # Import for filtering
 from django.contrib import messages
 from django.db.models import Q
+from django.db import IntegrityError, transaction # For handling database errors
+import csv # For reading CSV files
+import io # For decoding the uploaded file
 
 @login_required
 def faculty_view(request):
@@ -109,4 +113,94 @@ def delete_faculty_view(request, pk):
         return redirect('faculty')
     else:
         # Prevent GET request to delete
+        return redirect('faculty')
+
+# --- NEW: CSV Import View for Faculty ---
+
+@login_required
+@transaction.atomic # This makes the whole import one single database transaction
+def import_faculty_csv(request):
+    # Only Admin can import
+    if not request.user.role == 'admin':
+        messages.error(request, "You do not have permission to import faculty.")
+        return redirect('faculty')
+
+    if request.method == 'POST':
+        csv_file = request.FILES.get('csv_file')
+        
+        if not csv_file or not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Please upload a valid .csv file.')
+            return redirect('faculty')
+
+        try:
+            data_set = csv_file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            reader = csv.DictReader(io_string)
+            
+            created_count = 0
+            
+            for row in reader:
+                # 1. Get the Department object
+                try:
+                    department = Department.objects.get(name__iexact=row['department_name'])
+                except Department.DoesNotExist:
+                    messages.error(request, f"Department '{row['department_name']}' in CSV does not exist. No faculty were imported.")
+                    transaction.set_rollback(True)
+                    return redirect('faculty')
+                except KeyError:
+                    messages.error(request, "CSV is missing the 'department_name' column. No faculty were imported.")
+                    transaction.set_rollback(True)
+                    return redirect('faculty')
+
+                # 2. Create the User account
+                default_password = row.get('employee_id', 'password123')
+                
+                user, created_user = User.objects.get_or_create(
+                    username=row['employee_id'], # Use employee_id as the unique username
+                    defaults={
+                        'email': row['email'],
+                        'first_name': row['first_name'],
+                        'last_name': row['last_name'],
+                        'role': 'faculty',
+                        'is_active': True # Admin is importing, so we can assume they are pre-approved
+                    }
+                )
+                
+                if created_user:
+                    user.set_password(default_password) # Set password for new users
+                    user.save()
+
+                # 3. Create the Faculty profile (if it doesn't already exist)
+                _, created_faculty = Faculty.objects.get_or_create(
+                    user=user,
+                    employee_id=row['employee_id'],
+                    defaults={
+                        'department': department,
+                        'designation': row.get('designation', ''),
+                        'qualification': row.get('qualification', ''),
+                        'phone': row.get('phone', ''),
+                        'address': row.get('address', ''),
+                        'status': 'active' # Default to active
+                    }
+                )
+                
+                if created_faculty:
+                    created_count += 1
+
+            messages.success(request, f'Successfully imported {created_count} new faculty members.')
+
+        except IntegrityError as e:
+            messages.error(request, f'Database Error: {e}. A faculty member or user might already exist. No faculty were imported.')
+            transaction.set_rollback(True) # Rollback changes
+        except (KeyError, TypeError, ValueError) as e:
+            messages.error(request, f'CSV Error: Check your columns. Missing or invalid data for: {e}. No faculty were imported.')
+            transaction.set_rollback(True) # Rollback changes
+        except Exception as e:
+            messages.error(request, f'An unexpected error occurred: {e}')
+            transaction.set_rollback(True) # Rollback changes
+            
+        return redirect('faculty')
+
+    else:
+        # If it's a GET request, just redirect
         return redirect('faculty')

@@ -23,7 +23,7 @@
         <select name="department" class="form-select py-2 px-4 rounded-lg">
           <option value="">All Departments</option>
           {% for dept in departments %}
-          <option value="{{ dept.id }}" {% if dept_query == dept.id|slugify %}selected{% endif %}>
+          <option value="{{ dept.id }}" {% if dept_query == dept.id|stringformat:"s" %}selected{% endif %}>
             {{ dept.name }}
           </option>
           {% endfor %}
@@ -35,7 +35,6 @@
     </div>
   </form>
 
-  <!-- NEW: CSV Import Form -->
   {% if user.role == 'admin' %}
   <div class="border-t border-border pt-4 mt-4">
     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -45,7 +44,6 @@
       </div>
 
       <div class="flex gap-3">
-        <!-- The original "Add Faculty" button -->
         <a 
           href="{% url 'add_faculty' %}" 
           class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
@@ -54,7 +52,6 @@
           Add Faculty
         </a>
 
-        <!-- The new "Import" form -->
         <form method="POST" action="{% url 'import_faculty' %}" enctype="multipart/form-data" class="flex gap-3">
           {% csrf_token %}
           <label class="btn-secondary cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
@@ -71,9 +68,7 @@
     </div>
   </div>
   {% endif %}
-  <!-- END: CSV Import Form -->
-
-</div>
+  </div>
 
 <div class="bg-card rounded-2xl shadow-lg border border-border overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
   <div class="overflow-x-auto">
@@ -135,10 +130,7 @@
   </div>
 </div>
 
-{% endblock %} <!-- FIX: Added the missing endblock for 'content' -->
-
-<!-- NEW: Simple script to show the selected file name -->
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
   document.getElementById('csv_file_input').addEventListener('change', function() {
     var fileName = this.files[0] ? this.files[0].name : 'Choose CSV';
@@ -146,4 +138,3 @@
   });
 </script>
 {% endblock %}
-

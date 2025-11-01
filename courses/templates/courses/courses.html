@@ -21,7 +21,7 @@
         <select name="department" class="form-select py-2 px-4 rounded-lg">
           <option value="">All Departments</option>
           {% for dept in departments %}
-          <option value="{{ dept.id }}" {% if dept_query == dept.id|slugify %}selected{% endif %}>
+          <option value="{{ dept.id }}" {% if dept_query == dept.id|stringformat:"s" %}selected{% endif %}>
             {{ dept.name }}
           </option>
           {% endfor %}

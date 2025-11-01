@@ -36,17 +36,31 @@ class FacultyForm(forms.ModelForm):
         model = Faculty
         # We include all fields Admin needs to fill out
         fields = [
-            'user', 
-            'employee_id', 
-            'department', 
-            'designation', 
+            'user',
+            'employee_id',
+            'department',
+            'designation',
+            'employment_type',
+            'phone',
+            'alternate_phone',
+            'personal_email',
+            'address',
+            'city',
+            'state',
+            'postal_code',
             'qualification',
-            'experience',
-            'phone', 
-            'address', 
-            'joining_date', 
-            'salary', 
-            'status'
+            'specialization',
+            'research_interests',
+            'total_experience',
+            'industry_experience',
+            'teaching_experience',
+            'joining_date',
+            'contract_end_date',
+            'salary',
+            'bank_account',
+            'pan_number',
+            'status',
+            'is_hod'
         ]
         # Add a date picker widget for joining_date
         widgets = {

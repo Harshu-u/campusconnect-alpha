@@ -12,7 +12,7 @@
         <select name="course" class="form-select py-2 px-4 rounded-lg">
           <option value="">Select Course</option>
           {% for course in courses %}
-          <option value="{{ course.id }}" {% if course_query == course.id|slugify %}selected{% endif %}>
+          <option value="{{ course.id }}" {% if course_query == course.id|stringformat:"s" %}selected{% endif %}>
             {{ course.course_code }} - {{ course.name }}
           </option>
           {% endfor %}

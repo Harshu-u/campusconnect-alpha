@@ -1,11 +1,11 @@
 # --- File: students/views.py ---
-# This is the full and correct file.
+# This is the full and correct file (with import status fix)
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Student, Department
 from core.models import User # Import the User model
-from .forms import StudentForm 
+from .forms import StudentForm, DepartmentForm # <-- IMPORT NEW FORM
 from django.contrib import messages
 from django.db.models import Q
 from django.db import IntegrityError, transaction # For handling database errors
@@ -19,6 +19,10 @@ def students_view(request):
         return redirect('dashboard') 
         
     students_query = Student.objects.select_related('user', 'department').all()
+    
+    # --- FIX: Filter by active status by default ---
+    students_query = students_query.filter(status='active')
+    
     departments = Department.objects.all()
 
     # --- Filtering Logic ---
@@ -254,6 +258,7 @@ def import_students_csv(request):
                         'phone': row.get('phone', ''), # .get() handles optional columns
                         'address': row.get('address', ''),
                         'guardian_name': row.get('guardian_name', ''),
+                        'status': 'active' # <-- THIS IS THE FIX
                     }
                 )
                 
@@ -278,3 +283,98 @@ def import_students_csv(request):
         # If it's a GET request, just redirect
         return redirect('students')
 
+
+# --- NEW DEPARTMENT CRUD VIEWS ---
+
+@login_required
+def department_list_view(request):
+    """
+    List all departments.
+    """
+    # Only Admin can manage departments
+    if not request.user.role == 'admin':
+        messages.error(request, "You do not have permission to view this page.")
+        return redirect('dashboard') 
+    
+    departments = Department.objects.all()
+    context = {
+        'departments': departments,
+    }
+    return render(request, 'students/department_list.html', context)
+
+@login_required
+def add_department_view(request):
+    """
+    Add a new department.
+    """
+    if not request.user.role == 'admin':
+        messages.error(request, "You do not have permission to add departments.")
+        return redirect('departments')
+        
+    if request.method == 'POST':
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Department has been added successfully!")
+            return redirect('departments')
+    else:
+        form = DepartmentForm()
+        
+    context = {
+        'form': form,
+        'form_title': 'Add New Department'
+    }
+    return render(request, 'students/department_form.html', context)
+
+@login_required
+def edit_department_view(request, pk):
+    """
+    Edit an existing department.
+    """
+    if not request.user.role == 'admin':
+        messages.error(request, "You do not have permission to edit departments.")
+        return redirect('departments')
+    
+    department = get_object_or_404(Department, pk=pk)
+    
+    if request.method == 'POST':
+        form = DepartmentForm(request.POST, instance=department)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Department has been updated successfully!")
+            return redirect('departments')
+    else:
+        form = DepartmentForm(instance=department)
+        
+    context = {
+        'form': form,
+        'form_title': f'Edit Department: {department.name}'
+    }
+    return render(request, 'students/department_form.html', context)
+
+@login_required
+def delete_department_view(request, pk):
+    """
+    Delete a department.
+    """
+    if not request.user.role == 'admin':
+        messages.error(request, "You do not have permission to delete departments.")
+        return redirect('departments')
+    
+    department = get_object_or_404(Department, pk=pk)
+    
+    if request.method == 'POST':
+        try:
+            # Check for related objects before deleting
+            if department.students.exists() or department.faculty_members.exists() or department.courses.exists():
+                 messages.error(request, f'Cannot delete "{department.name}". It is still linked to students, faculty, or courses. Please reassign them first.')
+            else:
+                department.delete()
+                messages.success(request, f'Department "{department.name}" has been deleted.')
+        except IntegrityError:
+            # Catch-all for other potential database restrictions
+            messages.error(request, f'Cannot delete "{department.name}". It is still in use.')
+        return redirect('departments')
+    else:
+        # Prevent GET request to delete
+        return redirect('departments')

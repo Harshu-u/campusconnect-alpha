@@ -15,5 +15,10 @@ urlpatterns = [
     
     # NEW: URL for handling the Department CSV import
     path('import-departments/', views.import_departments_csv, name='import_departments'),
-]
 
+    # --- NEW DEPARTMENT CRUD URLS ---
+    path('departments/', views.department_list_view, name='departments'),
+    path('departments/add/', views.add_department_view, name='add_department'),
+    path('departments/edit/<int:pk>/', views.edit_department_view, name='edit_department'),
+    path('departments/delete/<int:pk>/', views.delete_department_view, name='delete_department'),
+]

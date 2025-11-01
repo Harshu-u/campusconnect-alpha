@@ -23,7 +23,7 @@
         <select name="department" class="form-select py-2 px-4 rounded-lg">
           <option value="">All Departments</option>
           {% for dept in departments %}
-          <option value="{{ dept.id }}" {% if dept_query == dept.id|slugify %}selected{% endif %}>
+          <option value="{{ dept.id }}" {% if dept_query == dept.id|stringformat:"s" %}selected{% endif %}>
             {{ dept.name }}
           </option>
           {% endfor %}
@@ -42,7 +42,6 @@
     </div>
   </form>
 
-  <!-- NEW: CSV Import Form for DEPARTMENTS -->
   {% if user.role == 'admin' %}
   <div class="mb-4">
     <form method="POST" action="{% url 'import_departments' %}" enctype="multipart/form-data" class="flex flex-col md:flex-row items-center gap-3 p-4 bg-muted/50 rounded-lg">
@@ -63,9 +62,6 @@
     </form>
   </div>
   {% endif %}
-  <!-- END: CSV Import Form for DEPARTMENTS -->
-
-  <!-- CSV Import Form for STUDENTS -->
   {% if user.role == 'admin' or user.role == 'faculty' %}
   <div>
     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -75,7 +71,6 @@
       </div>
 
       <div class="flex gap-3">
-        <!-- The original "Add Student" button -->
         <a 
           href="{% url 'add_student' %}" 
           class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
@@ -84,7 +79,6 @@
           Add Student
         </a>
 
-        <!-- The "Import Students" form -->
         <form method="POST" action="{% url 'import_students' %}" enctype="multipart/form-data" class="flex gap-3">
           {% csrf_token %}
           <label class="btn-secondary cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
@@ -101,9 +95,7 @@
     </div>
   </div>
   {% endif %}
-  <!-- END: CSV Import Form for STUDENTS -->
-
-</div>
+  </div>
 
 <div class="bg-card rounded-2xl shadow-lg border border-border overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
   <div class="overflow-x-auto">
@@ -179,7 +171,6 @@
 
 {% endblock %}
 
-<!-- FIX: Correctly separated scripts -->
 {% block extra_js %}
 <script>
   // Script for Student CSV Input
@@ -195,4 +186,3 @@
   });
 </script>
 {% endblock %}
-

@@ -1,79 +1,112 @@
-# --- File: attendance/views.py ---
-# This is the full and correct file (with fix)
-
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from datetime import date
 from .models import Attendance
 from students.models import Student
 from courses.models import Course
-from django.db.models import Count, Case, When, FloatField
+from faculty.models import Faculty
+from .forms import MassAttendanceForm, AttendanceRecordForm
+from django.contrib import messages
+from django.db import transaction
+import datetime
 
 @login_required
-def attendance_view(request):
-    today = date.today()
+def attendance_dashboard_view(request):
+    """
+    Main dashboard for faculty to take attendance or for students to view theirs.
+    """
+    if request.user.role == 'faculty':
+        return redirect('take_attendance')
+    else:
+        # Student view
+        attendances = Attendance.objects.filter(student__user=request.user).order_by('-date')
+        
+        # Calculate overall attendance percentage
+        total_classes = attendances.count()
+        present_classes = attendances.filter(status='present').count()
+        percentage = (present_classes / total_classes * 100) if total_classes > 0 else 0
+        
+        context = {
+            'attendances': attendances,
+            'total_classes': total_classes,
+            'present_classes': present_classes,
+            'percentage': round(percentage, 2),
+        }
+        return render(request, 'attendance/student_attendance_view.html', context)
+
+@login_required
+@transaction.atomic
+def take_attendance_view(request):
+    """
+    A view for faculty to take attendance for a selected course and date.
+    """
+    if not request.user.role == 'faculty':
+        messages.error(request, "You do not have permission to take attendance.")
+        return redirect('dashboard')
     
-    # --- Get Filter values ---
-    date_query = request.GET.get('date', today.strftime('%Y-%m-%d'))
-    course_query = request.GET.get('course', '')
-    student_query = request.GET.get('student', '')
+    try:
+        faculty = request.user.faculty_profile
+    except Faculty.DoesNotExist:
+        messages.error(request, "Your faculty profile is not set up.")
+        return redirect('dashboard')
 
-    # --- Fetch Data ---
-    attendance_records = Attendance.objects.select_related(
-        'student', 'student__user', 'course'
-    ).filter(date=date_query)
+    students = Student.objects.none()
+    course = None
+    date = None
 
-    if course_query:
-        try:
-            attendance_records = attendance_records.filter(course__id=int(course_query))
-        except (ValueError, TypeError):
-            pass # Ignore invalid course ID
-
-    if student_query:
-        try:
-            attendance_records = attendance_records.filter(student__id=int(student_query))
-        except (ValueError, TypeError):
-            pass # Ignore invalid student ID
+    if request.method == 'POST':
+        form = MassAttendanceForm(request.POST, faculty=faculty)
+        
+        if 'load_students' in request.POST:
+            # Faculty has selected a course and date, show the student list
+            if form.is_valid():
+                course = form.cleaned_data['course']
+                date = form.cleaned_data['date']
+                # Get students enrolled in this course's department and year
+                students = Student.objects.filter(
+                    department=course.department, 
+                    status='active'
+                    # You might need to filter by year/semester here too
+                )
+        
+        elif 'save_attendance' in request.POST:
+            # Faculty is saving the attendance data
+            course_id = request.POST.get('course')
+            date_str = request.POST.get('date')
             
-    # --- FIX IS HERE: Added .order_by('course') ---
-    attendance_records = attendance_records.order_by('course')
+            try:
+                course = Course.objects.get(id=course_id)
+                date = datetime.date.fromisoformat(date_str)
+                
+                # Re-load the students to be safe
+                students = Student.objects.filter(department=course.department, status='active')
 
-    # --- Get Dropdown Data ---
-    courses = Course.objects.filter(is_active=True)
-    students = Student.objects.select_related('user').filter(status='active')
-    
-    # --- Calculate Summary ---
-    summary_base_query = Attendance.objects.all()
-    summary_title = "Overall Attendance Summary"
-    
-    if student_query:
-        try:
-            summary_base_query = summary_base_query.filter(student__id=int(student_query))
-            selected_student = students.get(id=int(student_query))
-            summary_title = f"{selected_student.user.first_name}'s Summary"
-        except (ValueError, TypeError, Student.DoesNotExist):
-            pass # Use overall summary
+                for student in students:
+                    status = request.POST.get(f'status_{student.id}')
+                    if status:
+                        # Update or create the attendance record
+                        Attendance.objects.update_or_create(
+                            student=student,
+                            course=course,
+                            date=date,
+                            defaults={
+                                'status': status,
+                                'faculty': faculty
+                            }
+                        )
+                
+                messages.success(request, f"Attendance for {course.title} on {date} saved successfully!")
+                return redirect('attendance_dashboard')
+                
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
 
-    summary_stats = summary_base_query.aggregate(
-        total=Count('id'),
-        attended=Count(
-            Case(When(status__in=['present', 'late'], then=1))
-        )
-    )
-
-    overall_rate = 0.0
-    if summary_stats['total'] > 0:
-        overall_rate = round((summary_stats['attended'] / summary_stats['total']) * 100, 1)
+    else:
+        form = MassAttendanceForm(faculty=faculty)
 
     context = {
-        'today_date': today.strftime('%Y-%m-%d'),
-        'attendance_records': attendance_records,
-        'courses': courses,
+        'form': form,
         'students': students,
-        'date_query': date_query,
-        'course_query': course_query,
-        'student_query': student_query,
-        'summary_title': summary_title,
-        'overall_rate': overall_rate,
+        'course': course,
+        'date': date,
     }
-    return render(request, 'attendance/attendance.html', context)
+    return render(request, 'attendance/take_attendance_form.html', context)

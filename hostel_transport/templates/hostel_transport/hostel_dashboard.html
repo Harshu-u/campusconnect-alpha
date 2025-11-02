@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Hostel Management{% endblock %}
+
+{% block content %}
+
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Hostel Dashboard</h1>
+            <p class="mt-1 text-lg text-gray-600">Allocate rooms and manage current residents.</p>
+        </div>
+        {% if user.role == 'admin' %}
+        <div class="flex-shrink-0">
+            <a href="{% url 'manage_hostels' %}" class="flex w-full items-center justify-center rounded-md bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all sm:w-auto">
+                Manage Hostels & Rooms
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        
+        <div class="lg:col-span-1">
+            <div class="rounded-lg bg-white p-6 shadow-md">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900">Allocate Room</h3>
+                <form method="POST" class="mt-6 space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label for="{{ form.student_id.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.student_id.label }}</label>
+                        <div class="mt-2">
+                            {{ form.student_id }}
+                        </div>
+                        {% for error in form.student_id.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.room.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.room.label }}</label>
+                        <div class="mt-2">
+                            {{ form.room }}
+                        </div>
+                         {% for error in form.room.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    {{ form.student }} <div class="border-t border-gray-200 pt-6">
+                        <button type="submit" class="flex w-full justify-center rounded-md bg-primary-600 py-2.5 px-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all">
+                            Allocate Room
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="flow-root">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900 mb-6">Current Allocations</h3>
+                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow-md ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Student</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hostel</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Room #</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Allocated</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    {% for alloc in allocations %}
+                                    <tr class="transition-colors hover:bg-gray-50">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                            {{ alloc.student.user.get_full_name }}
+                                            <span class="font-mono text-xs text-gray-500">({{ alloc.student.student_id }})</span>
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ alloc.room.hostel.name }}</td>
+                                        <td class_name="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ alloc.room.room_number }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ alloc.date_allocated }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="whitespace-nowrap px-3 py-12 text-center text-sm text-gray-500">
+                                            <h3 class="text-lg font-semibold text-gray-900">No Allocations Found</h3>
+                                            <p class="mt-1 text-gray-500">No students have been allocated a room yet.</p>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    .form-input, .select2-container .select2-selection--single {
+         @apply block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6;
+         height: calc(2.5rem + 2px);
+         padding-top: 0.5rem;
+         padding-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}

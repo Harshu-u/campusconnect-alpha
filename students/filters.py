@@ -1,62 +1,47 @@
-# --- File: students/filters.py ---
-# This is the full and correct file.
-
 import django_filters
+from django import forms
 from .models import Student, Department
 from django.db.models import Q
 
 class StudentFilter(django_filters.FilterSet):
-    """
-    A filter set for the Student model.
-    """
+    # This 'search' field is not tied to a model field, so we define it manually
+    search = django_filters.CharFilter(
+        method='filter_search', 
+        label="Search",
+        widget=forms.TextInput(attrs={'placeholder': 'Search by Name, ID, or Email...', 'class': 'form-input'})
+    )
     
-    # Custom filter for a combined name/ID/email search
-    search = django_filters.CharFilter(method='filter_by_search', label="Search")
-    
-    # Filter by department
     department = django_filters.ModelChoiceFilter(
         queryset=Department.objects.all(),
-        field_name='department',
-        label='Department'
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Department"
     )
-    
-    # Filter by year
+
     year = django_filters.ChoiceFilter(
-        choices=[(i, f'Year {i}') for i in range(1, 5)],
-        field_name='year',
-        label='Year'
+        choices=Student.YEAR_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Year"
     )
-    
-    # Filter by section
-    section = django_filters.ChoiceFilter(
-        choices=Student.SECTION_CHOICES,
-        field_name='section',
-        label='Section'
-    )
-    
-    # Filter by status
+
     status = django_filters.ChoiceFilter(
         choices=Student.STATUS_CHOICES,
-        field_name='status',
-        label='Status'
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Status"
     )
 
     class Meta:
         model = Student
-        # Define fields that can be filtered on
-        fields = ['search', 'department', 'year', 'section', 'status']
+        fields = ['search', 'department', 'year', 'status']
 
-    def filter_by_search(self, queryset, name, value):
-        """
-        Custom method to search across multiple fields.
-        """
+    def filter_search(self, queryset, name, value):
+        # This method is called when the 'search' field is used
+        # It searches across multiple fields on the related User model and the Student model
         if not value:
             return queryset
         
-        # Q objects allow for complex "OR" lookups
         return queryset.filter(
             Q(user__first_name__icontains=value) |
             Q(user__last_name__icontains=value) |
-            Q(student_id__icontains=value) |
-            Q(user__email__icontains=value)
+            Q(user__email__icontains=value) |
+            Q(student_id__icontains=value)
         )

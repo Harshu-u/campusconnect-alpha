@@ -1,47 +1,80 @@
-{% extends "core/base.html" %}
+{% extends 'core/base.html' %}
 
-{% block title %}Add Student{% endblock %}
-
-{% block page_title %}{{ form_title|default:"Student Form" }}{% endblock %}
+{% block title %}{{ form_title }}{% endblock %}
 
 {% block content %}
-<div class="bg-card p-6 md:p-8 rounded-2xl shadow-lg border border-border max-w-4xl mx-auto animate-fade-in-up">
-  <form method="post">
-    {% csrf_token %}
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-          <div class="md:col-span-2 bg-destructive/10 text-destructive text-sm p-3 rounded-lg">{{ error }}</div>
-        {% endfor %}
-      {% endif %}
 
-      {% for field in form %}
-        <div class="space-y-2 {% if field.name == 'address' %} md:col-span-2 {% endif %}">
-          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-foreground mb-1">{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}
-            <p class="text-xs text-muted-foreground mt-1">{{ field.help_text }}</p>
-          {% endif %}
-          {% for error in field.errors %}
-            <div class="text-destructive text-xs mt-1">{{ error }}</div>
-          {% endfor %}
+<div class="mx-auto max-w-3xl animate-fade-in-up">
+    <div class="mb-6">
+        <a href="{% url 'students' %}" class="text-sm font-semibold leading-6 text-primary-600 hover:text-primary-500 transition-colors">
+            &larr; Back to Student List
+        </a>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">{{ form_title }}</h1>
+        <p class="mt-1 text-lg text-gray-600">Fill out the details for the student profile.</p>
+    </div>
+
+    <form method="POST" class="berserk-card p-8">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="rounded-md bg-red-50 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" /></svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Please correct the errors below.</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul role="list" class="list-disc space-y-1 pl-5">
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            {% for field in form %}
+                {% if field.name == 'address' %}
+                <div class="sm:col-span-6">
+                {% else %}
+                <div class="sm:col-span-3">
+                {% endif %}
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }}</label>
+                    <div class="mt-2">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                        <p class="mt-2 text-sm text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
         </div>
-      {% endfor %}
-    </div>
 
-    <div class="mt-8 pt-6 border-t border-border flex items-center gap-4">
-      <button 
-        type="submit" 
-        class="btn-primary flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-medium"
-      >
-        <i data-lucide="save" class="w-4 h-4"></i>
-        Save Student
-      </button>
-      <a href="{% url 'students' %}" class="text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:underline">
-        Cancel
-      </a>
-    </div>
-  </form>
+        <div class="mt-10 flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-8">
+            <a href="{% url 'students' %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary">
+                Save Profile
+            </button>
+        </div>
+    </form>
 </div>
+
+<style>
+    form select,
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="number"],
+    form input[type="date"],
+    form textarea {
+        @apply form-input;
+    }
+</style>
+
 {% endblock %}

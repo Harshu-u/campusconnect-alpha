@@ -1,149 +1,76 @@
-{% extends "core/base.html" %}
+{% extends 'core/base.html' %}
 
 {% block title %}{{ form_title }}{% endblock %}
 
-{% block page_title %}{{ form_title }}{% endblock %}
-
 {% block content %}
 
-<div class="bg-card p-6 md:p-8 rounded-2xl shadow-lg border border-border max-w-4xl mx-auto animate-fade-in-up">
-  <form method="POST" novalidate>
-    {% csrf_token %}
-
-    {% if form.non_field_errors %}
-      <div class="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg mb-6" role="alert">
-        {% for error in form.non_field_errors %}
-          <p>{{ error }}</p>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    <div class="mb-8">
-      <h3 class="text-lg font-semibold text-foreground border-b border-border pb-2 mb-4">User Account</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="space-y-2">
-          <label for="{{ form.first_name.id_for_label }}" class="text-sm font-medium text-muted-foreground">First Name</label>
-          {{ form.first_name }}
-          {% if form.first_name.errors %}<p class="text-sm text-destructive">{{ form.first_name.errors.as_text }}</p>{% endif %}
-        </div>
-        
-        <div class="space-y-2">
-          <label for="{{ form.last_name.id_for_label }}" class="text-sm font-medium text-muted-foreground">Last Name</label>
-          {{ form.last_name }}
-          {% if form.last_name.errors %}<p class="text-sm text-destructive">{{ form.last_name.errors.as_text }}</p>{% endif %}
-        </div>
-
-        <div class="space-y-2 md:col-span-2">
-          <label for="{{ form.email.id_for_label }}" class="text-sm font-medium text-muted-foreground">Account Email</label>
-          {{ form.email }}
-          {% if form.email.errors %}<p class="text-sm text-destructive">{{ form.email.errors.as_text }}</p>{% endif %}
-          {% if form.email.disabled %}
-            <p class="text-xs text-muted-foreground">Email cannot be changed after creation.</p>
-          {% endif %}
-        </div>
-      </div>
+<div class="mx-auto max-w-3xl animate-fade-in-up">
+    <div class="mb-6">
+        <a href="{% url 'faculty' %}" class="text-sm font-semibold leading-6 text-primary-600 hover:text-primary-500 transition-colors">
+            &larr; Back to Faculty List
+        </a>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">{{ form_title }}</h1>
+        <p class="mt-1 text-lg text-gray-600">Fill out the details for the faculty profile.</p>
     </div>
 
-    <div class_ ="mb-8">
-      <h3 class="text-lg font-semibold text-foreground border-b border-border pb-2 mb-4">Profile Details</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="space-y-2">
-          <label for="{{ form.employee_id.id_for_label }}" class="text-sm font-medium text-muted-foreground">Employee ID</label>
-          {{ form.employee_id }}
-          {% if form.employee_id.errors %}<p class="text-sm text-destructive">{{ form.employee_id.errors.as_text }}</p>{% endif %}
-          {% if form.employee_id.disabled %}
-            <p class="text-xs text-muted-foreground">Employee ID (username) cannot be changed after creation.</p>
-          {% endif %}
+    <form method="POST" class="berserk-card p-8">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+             <div class="rounded-md bg-red-50 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" /></svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Please correct the errors below.</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul role="list" class="list-disc space-y-1 pl-5">
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            {% for field in form %}
+                <div class="sm:col-span-3">
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }}</label>
+                    <div class="mt-2">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                        <p class="mt-2 text-sm text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
         </div>
 
-        <div class="space-y-2">
-          <label for="{{ form.department.id_for_label }}" class="text-sm font-medium text-muted-foreground">Department</label>
-          {{ form.department }}
-          {% if form.department.errors %}<p class="text-sm text-destructive">{{ form.department.errors.as_text }}</p>{% endif %}
+        <div class="mt-10 flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-8">
+            <a href="{% url 'faculty' %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary">
+                Save Profile
+            </button>
         </div>
-
-        <div class="space-y-2">
-          <label for="{{ form.phone.id_for_label }}" class="text-sm font-medium text-muted-foreground">Phone Number</label>
-          {{ form.phone }}
-          {% if form.phone.errors %}<p class="text-sm text-destructive">{{ form.phone.errors.as_text }}</p>{% endif %}
-        </div>
-
-        <div class="space-y-2">
-          <label for="{{ form.alternate_phone.id_for_label }}" class="text-sm font-medium text-muted-foreground">Alternate Phone (Optional)</label>
-          {{ form.alternate_phone }}
-          {% if form.alternate_phone.errors %}<p class="text-sm text-destructive">{{ form.alternate_phone.errors.as_text }}</p>{% endif %}
-        </div>
-        
-        <div class="space-y-2">
-          <label for="{{ form.personal_email.id_for_label }}" class="text-sm font-medium text-muted-foreground">Personal Email (Optional)</label>
-          {{ form.personal_email }}
-          {% if form.personal_email.errors %}<p class="text-sm text-destructive">{{ form.personal_email.errors.as_text }}</p>{% endif %}
-        </div>
-
-        <div class="space-y-2">
-          <label for="{{ form.qualification.id_for_label }}" class="text-sm font-medium text-muted-foreground">Qualification</label>
-          {{ form.qualification }}
-          {% if form.qualification.errors %}<p class="text-sm text-destructive">{{ form.qualification.errors.as_text }}</p>{% endif %}
-        </div>
-
-        <div class="space-y-2 md:col-span-2">
-          <label for="{{ form.specialization.id_for_label }}" class="text-sm font-medium text-muted-foreground">Specialization</label>
-          {{ form.specialization }}
-          {% if form.specialization.errors %}<p class="text-sm text-destructive">{{ form.specialization.errors.as_text }}</p>{% endif %}
-        </div>
-
-        <div class="space-y-2 md:col-span-2">
-          <label for="{{ form.address.id_for_label }}" class="text-sm font-medium text-muted-foreground">Address (Optional)</label>
-          {{ form.address }}
-          {% if form.address.errors %}<p class="text-sm text-destructive">{{ form.address.errors.as_text }}</p>{% endif %}
-        </div>
-      </div>
-    </div>
-    
-    <div>
-      <h3 class="text-lg font-semibold text-foreground border-b border-border pb-2 mb-4">Employment Details</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="space-y-2">
-          <label for="{{ form.joining_date.id_for_label }}" class="text-sm font-medium text-muted-foreground">Joining Date</label>
-          {{ form.joining_date }}
-          {% if form.joining_date.errors %}<p class="text-sm text-destructive">{{ form.joining_date.errors.as_text }}</p>{% endif %}
-        </div>
-
-        <div class="space-y-2">
-          <label for="{{ form.employment_type.id_for_label }}" class="text-sm font-medium text-muted-foreground">Employment Type</label>
-          {{ form.employment_type }}
-          {% if form.employment_type.errors %}<p class="text-sm text-destructive">{{ form.employment_type.errors.as_text }}</p>{% endif %}
-        </div>
-        
-        <div class="space-y-2">
-          <label for="{{ form.status.id_for_label }}" class="text-sm font-medium text-muted-foreground">Status</label>
-          {{ form.status }}
-          {% if form.status.errors %}<p class="text-sm text-destructive">{{ form.status.errors.as_text }}</p>{% endif %}
-        </div>
-        
-        <div class="space-y-2">
-          <label for="{{ form.designation.id_for_label }}" class="text-sm font-medium text-muted-foreground">Designation</label>
-          {{ form.designation }}
-          {% if form.designation.errors %}<p class="text-sm text-destructive">{{ form.designation.errors.as_text }}</p>{% endif %}
-        </div>
-
-        <div class="space-y-2">
-          <label for="{{ form.salary.id_for_label }}" class="text-sm font-medium text-muted-foreground">Salary (Annual)</label>
-          {{ form.salary }}
-          {% if form.salary.errors %}<p class="text-sm text-destructive">{{ form.salary.errors.as_text }}</p>{% endif %}
-        </div>
-      </div>
-    </div>
-
-    <div class="flex items-center justify-end gap-4 mt-8 pt-6 border-t border-border">
-      <a href="{% url 'faculty' %}" class="btn-secondary px-5 py-2.5 rounded-lg text-sm">
-        Cancel
-      </a>
-      <button type="submit" class="btn-primary px-5 py-2.5 rounded-lg text-sm">
-        Save Faculty
-      </button>
-    </div>
-  </form>
+    </form>
 </div>
+
+<style>
+    form select,
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="number"],
+    form input[type="date"],
+    form textarea {
+        @apply form-input;
+    }
+</style>
 
 {% endblock %}

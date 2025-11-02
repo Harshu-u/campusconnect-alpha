@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Fee Structures{% endblock %}
+
+{% block content %}
+
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <a href="{% url 'fees' %}" class="text-sm font-semibold leading-6 text-primary-600 hover:text-primary-500">
+                &larr; Back to Fee Management
+            </a>
+            <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">Fee Structures</h1>
+            <p class="mt-1 text-lg text-gray-600">Define fee amounts for each department and year.</p>
+        </div>
+        <div class="flex-shrink-0">
+            <a href="{% url 'add_fee_structure' %}" class="flex w-full items-center justify-center rounded-md bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all sm:w-auto">
+                Add New Structure
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-8 flow-root">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div class="overflow-hidden shadow-md ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Department</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Year</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tuition Fee</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hostel Fee</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Transport Fee</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Total</th>
+                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                    <span class="sr-only">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            {% for s in structures %}
+                            <tr class="transition-colors hover:bg-gray-50">
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ s.department.name }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ s.get_year_display }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">₹{{ s.tuition_fee }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">₹{{ s.hostel_fee }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">₹{{ s.transport_fee }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-gray-900">₹{{ s.total_fee }}</td>
+                                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                    <a href="{% url 'edit_fee_structure' s.pk %}" class="text-primary-600 hover:text-primary-800">Edit</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="whitespace-nowrap px-3 py-12 text-center text-sm text-gray-500">
+                                    <h3 class="text-lg font-semibold text-gray-900">No Fee Structures Found</h3>
+                                    <p class="mt-1 text-gray-500">Get started by adding a fee structure.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

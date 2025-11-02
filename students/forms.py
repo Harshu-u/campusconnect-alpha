@@ -1,80 +1,81 @@
-# --- File: students/forms.py ---
-# This is the full and correct file.
-
 from django import forms
 from .models import Student, Department
 from core.models import User
+import datetime
 
 class StudentForm(forms.ModelForm):
-    
-    # Define common CSS classes for all form widgets
-    FORM_INPUT_CLASSES = 'form-input w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
-    FORM_SELECT_CLASSES = 'form-select w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
-    FORM_DATE_CLASSES = 'form-date w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
+    # We are getting User fields to create/update the User model at the same time
+    first_name = forms.CharField(max_length=100)
+    last_name = forms.CharField(max_length=100)
+    email = forms.EmailField()
 
-    def __init__(self, *args, **kwargs):
-        """
-        Filters the 'user' queryset to only show users with the 'student'
-        role who do not already have a student_profile.
-        """
-        super().__init__(*args, **kwargs)
-        
-        # Per Task 1.B: Filter users
-        self.fields['user'].queryset = User.objects.filter(
-            role='student', 
-            student_profile__isnull=True
-        )
-        
-        # Apply Tailwind classes to all fields
-        for field_name, field in self.fields.items():
-            if isinstance(field.widget, forms.DateInput):
-                 field.widget.attrs.update({'class': self.FORM_DATE_CLASSES})
-            elif isinstance(field.widget, forms.Select):
-                 field.widget.attrs.update({'class': self.FORM_SELECT_CLASSES})
-            else:
-                 field.widget.attrs.update({'class': self.FORM_INPUT_CLASSES})
+    # Make date fields use the HTML5 date picker
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    date_of_admission = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), initial=datetime.date.today)
 
     class Meta:
         model = Student
-        # We include all fields Admin needs to fill out
+        # List all fields from the Student model *and* our extra User fields
         fields = [
-            'user', 
-            'student_id', 
-            'department', 
-            'year', 
-            'semester', 
-            'enrollment_date', 
-            'phone', 
-            'address', 
-            'guardian_name', 
-            'guardian_phone', 
-            'status'
+            'first_name', 'last_name', 'email', 'student_id', 'department', 
+            'year', 'semester', 'phone', 'address', 'date_of_birth',
+            'guardian_name', 'guardian_phone', 'date_of_admission', 'status'
         ]
-        # Add a date picker widget for enrollment_date
-        widgets = {
-            'enrollment_date': forms.DateInput(attrs={'type': 'date'}),
-        }
-
-# --- NEW DEPARTMENT FORM ---
-class DepartmentForm(forms.ModelForm):
-    
-    # Define common CSS classes
-    FORM_INPUT_CLASSES = 'form-input w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
-    FORM_TEXTAREA_CLASSES = 'form-input w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # Apply Tailwind classes to all fields
+        # If we are editing an existing student, populate the User fields
+        if self.instance and self.instance.pk:
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['email'].initial = self.instance.user.email
+            
+        # Add Tailwind classes to all fields
         for field_name, field in self.fields.items():
-            if isinstance(field.widget, forms.Textarea):
-                 field.widget.attrs.update({'class': self.FORM_TEXTAREA_CLASSES, 'rows': 3})
+            if not isinstance(field.widget, forms.DateInput):
+                field.widget.attrs['class'] = 'form-input'
             else:
-                 field.widget.attrs.update({'class': self.FORM_INPUT_CLASSES})
+                # Special handling for date widgets to ensure they use the form-input class
+                field.widget.attrs.update({'class': 'form-input'})
 
+    def save(self, commit=True):
+        # Save the Student instance
+        student = super().save(commit=False)
+        
+        # Get or create the User
+        try:
+            user = self.instance.user
+        except User.DoesNotExist:
+            # Create a new user if this is a new student
+            user = User(username=self.cleaned_data['student_id'])
+            user.set_password(self.cleaned_data['student_id']) # Default password
+            user.role = 'student'
+
+        # Update User fields from the form
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.email = self.cleaned_data['email']
+        user.username = self.cleaned_data['student_id'] # Ensure username stays synced
+        
+        if commit:
+            user.save()
+            student.user = user
+            student.save()
+            
+        return student
+
+class DepartmentForm(forms.ModelForm):
     class Meta:
         model = Department
         fields = ['name', 'code', 'head_of_department', 'description']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 3}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add Tailwind classes
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-input'
+            if isinstance(field.widget, forms.Textarea):
+                field.widget.attrs['rows'] = 3
+        
+        self.fields['head_of_department'].required = False
+        self.fields['description'].required = False

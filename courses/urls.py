@@ -1,21 +1,16 @@
-# --- File: courses/urls.py ---
-# This is the full and correct file.
-
 from django.urls import path
 from . import views
 
-app_name = 'courses'
-
 urlpatterns = [
-    # Main course list view
-    path('', views.course_list_view, name='courses'),
+    # /courses/
+    path('', views.courses_view, name='courses'),
     
-    # Add new course
+    # /courses/add/
     path('add/', views.add_course_view, name='add_course'),
     
-    # Edit course
+    # /courses/edit/1/
     path('edit/<int:pk>/', views.edit_course_view, name='edit_course'),
     
-    # Delete course
+    # /courses/delete/1/
     path('delete/<int:pk>/', views.delete_course_view, name='delete_course'),
-]   
+]

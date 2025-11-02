@@ -1,0 +1,105 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ form_title }}{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-3xl">
+    <div class="mb-6">
+         <a href="{% url 'fees' %}" class="text-sm font-semibold leading-6 text-primary-600 hover:text-primary-500">
+            &larr; Back to Fee Management
+        </a>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">{{ form_title }}</h1>
+        <p class="mt-1 text-lg text-gray-600">All fields are for the full academic year.</p>
+    </div>
+
+    <form method="POST" class="space-y-8 rounded-lg bg-white p-8 shadow-md">
+        {% csrf_token %}
+        {{ form.student }} <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+            <div>
+                <label for="{{ form.academic_year.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.academic_year.label }}</label>
+                <div class="mt-2">
+                    {{ form.academic_year }}
+                </div>
+                {% for error in form.academic_year.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            <div>
+                <label for="{{ form.semester.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.semester.label }}</label>
+                <div class="mt-2">
+                    {{ form.semester }}
+                </div>
+                {% for error in form.semester.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            <div>
+                <label for="{{ form.total_amount.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.total_amount.label }}</label>
+                <div class="mt-2">
+                    {{ form.total_amount }}
+                </div>
+                {% for error in form.total_amount.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            <div>
+                <label for="{{ form.amount_paid.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.amount_paid.label }}</label>
+                <div class="mt-2">
+                    {{ form.amount_paid }}
+                </div>
+                {% for error in form.amount_paid.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            <div>
+                <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.status.label }}</label>
+                <div class="mt-2">
+                    {{ form.status }}
+                </div>
+                {% for error in form.status.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            <div>
+                <label for="{{ form.payment_date.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.payment_date.label }}</label>
+                <div class="mt-2">
+                    {{ form.payment_date }}
+                </div>
+                {% for error in form.payment_date.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            <div class="sm:col-span-2">
+                <label for="{{ form.transaction_id.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.transaction_id.label }}</label>
+                <div class="mt-2">
+                    {{ form.transaction_id }}
+                </div>
+                {% for error in form.transaction_id.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mt-10 flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-8">
+            <a href="{% url 'fees' %}" class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
+            <button type="submit" class="rounded-md bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all">
+                Save Payment
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-input {
+         @apply block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6;
+    }
+</style>
+
+{% endblock %}

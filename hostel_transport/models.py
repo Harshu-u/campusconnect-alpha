@@ -1,65 +1,45 @@
 from django.db import models
 from students.models import Student
+from django.utils.translation import gettext_lazy as _
 
 class Hostel(models.Model):
-    TYPE_CHOICES = ( ('boys', 'Boys'), ('girls', 'Girls') )
-    name = models.CharField(max_length=100)
-    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    total_rooms = models.IntegerField(blank=True, null=True)
-    occupied_rooms = models.IntegerField(default=0)
-    warden = models.CharField(max_length=100, blank=True, null=True)
-    contact_number = models.CharField(max_length=20, blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100, unique=True, verbose_name=_("Hostel Name"))
+    capacity = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
 
-class HostelRoom(models.Model):
-    STATUS_CHOICES = (
-        ('available', 'Available'),
-        ('occupied', 'Occupied'),
-        ('maintenance', 'Maintenance'),
-    )
-    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE, related_name="rooms")
-    room_number = models.CharField(max_length=10)
-    capacity = models.IntegerField(default=1)
-    occupied_beds = models.IntegerField(default=0)
-    rent = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
-    created_at = models.DateTimeField(auto_now_add=True)
+class Room(models.Model):
+    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE, related_name='rooms')
+    room_number = models.CharField(max_length=20, verbose_name=_("Room Number"))
+    capacity = models.PositiveIntegerField(default=3)
+    
+    class Meta:
+        unique_together = ('hostel', 'room_number')
 
     def __str__(self):
         return f"{self.hostel.name} - Room {self.room_number}"
 
 class HostelAllocation(models.Model):
-    STATUS_CHOICES = ( ('active', 'Active'), ('checkout', 'Checkout') )
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="hostel_allocation")
-    room = models.ForeignKey(HostelRoom, on_delete=models.SET_NULL, null=True, related_name="allocations")
-    allocation_date = models.DateField()
-    checkout_date = models.DateField(blank=True, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-class TransportRoute(models.Model):
-    route_name = models.CharField(max_length=100)
-    source = models.CharField(max_length=100, blank=True, null=True)
-    destination = models.CharField(max_length=100, blank=True, null=True)
-    distance = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    fare = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    driver_name = models.CharField(max_length=100, blank=True, null=True)
-    driver_contact = models.CharField(max_length=20, blank=True, null=True)
-    vehicle_number = models.CharField(max_length=20, blank=True, null=True)
-    capacity = models.IntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='hostel_allocation')
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True, related_name='allocations')
+    date_allocated = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.route_name
+        return f"{self.student} - {self.room}"
 
-class TransportAssignment(models.Model):
-    STATUS_CHOICES = ( ('active', 'Active'), ('inactive', 'Inactive') )
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="transport_assignment")
-    route = models.ForeignKey(TransportRoute, on_delete=models.SET_NULL, null=True, related_name="assignments")
-    assignment_date = models.DateField()
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
+class TransportRoute(models.Model):
+    route_name = models.CharField(max_length=255, verbose_name=_("Route Name"))
+    bus_number = models.CharField(max_length=50, verbose_name=_("Bus Number"))
+    driver_name = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"{self.route_name} ({self.bus_number})"
+
+class TransportAllocation(models.Model):
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='transport_allocation')
+    route = models.ForeignKey(TransportRoute, on_delete=models.SET_NULL, null=True, blank=True, related_name='allocations')
+    date_allocated = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student} - {self.route}"

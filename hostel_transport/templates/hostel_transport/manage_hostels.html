@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Manage Hostels & Rooms{% endblock %}
+
+{% block content %}
+
+    <div class="mb-6">
+        <a href="{% url 'hostel_dashboard' %}" class="text-sm font-semibold leading-6 text-primary-600 hover:text-primary-500">
+            &larr; Back to Hostel Dashboard
+        </a>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">Manage Hostels & Rooms</h1>
+        <p class="mt-1 text-lg text-gray-600">Add or edit hostels and the rooms within them.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        
+        <div class="lg:col-span-1 space-y-8">
+            <div class="rounded-lg bg-white p-6 shadow-md">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900">Add New Hostel</h3>
+                <form method="POST" class="mt-6 space-y-6">
+                    {% csrf_token %}
+                    <div>
+                        <label for="{{ hostel_form.name.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ hostel_form.name.label }}</label>
+                        <div class="mt-2">
+                            {{ hostel_form.name }}
+                        </div>
+                    </div>
+                    <div>
+                        <label for="{{ hostel_form.capacity.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ hostel_form.capacity.label }}</label>
+                        <div class="mt-2">
+                            {{ hostel_form.capacity }}
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <button type="submit" name="add_hostel" class="flex w-full justify-center rounded-md bg-primary-600 py-2.5 px-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all">
+                            Save Hostel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="rounded-lg bg-white p-6 shadow-md">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900">Add New Room</h3>
+                <form method="POST" class="mt-6 space-y-6">
+                    {% csrf_token %}
+                    <div>
+                        <label for="{{ room_form.hostel.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ room_form.hostel.label }}</label>
+                        <div class="mt-2">
+                            {{ room_form.hostel }}
+                        </div>
+                    </div>
+                    <div>
+                        <label for="{{ room_form.room_number.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ room_form.room_number.label }}</label>
+                        <div class="mt-2">
+                            {{ room_form.room_number }}
+                        </div>
+                    </div>
+                    <div>
+                        <label for="{{ room_form.capacity.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ room_form.capacity.label }}</label>
+                        <div class="mt-2">
+                            {{ room_form.capacity }}
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <button type="submit" name="add_room" class="flex w-full justify-center rounded-md bg-primary-600 py-2.5 px-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all">
+                            Save Room
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="flow-root">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900 mb-6">Existing Rooms</h3>
+                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow-md ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Room #</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hostel</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Capacity</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    {% for room in rooms %}
+                                    <tr class="transition-colors hover:bg-gray-50">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ room.room_number }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ room.hostel.name }}</td>
+                                        <td class_name="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ room.capacity }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="whitespace-nowrap px-3 py-12 text-center text-sm text-gray-500">
+                                            <p>No rooms have been added yet.</p>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    .form-input {
+         @apply block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6;
+    }
+</style>
+{% endblock %}s

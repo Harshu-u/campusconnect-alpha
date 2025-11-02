@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Manage Results for {{ exam.name }}{% endblock %}
+
+{% block content %}
+
+    <div class="mb-6 animate-fade-in-up">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Manage Results</h1>
+        <p class="mt-1 text-lg text-gray-600 dark:text-gray-400">
+            Entering marks for <span class="font-semibold text-primary-700 dark:text-primary-400">{{ exam.name }}</span> ({{ exam.course.code }})
+        </p>
+        <p class="text-gray-500 dark:text-gray-400">Maximum Marks: {{ exam.max_marks }}</p>
+    </div>
+
+    <form method="POST" class="animate-fade-in-up delay-100">
+        {% csrf_token %}
+        <div class="flow-root">
+            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <div class="berserk-table-wrapper">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                            <thead class="berserk-table-header">
+                                <tr>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 sm:pl-6">Student ID</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Name</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Marks Obtained</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white dark:bg-slate-900 dark:divide-slate-800">
+                                {% for item in student_results %}
+                                <tr class="berserk-table-row">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-mono text-gray-500 dark:text-gray-400 sm:pl-6">{{ item.student_reg_id }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">{{ item.student_name }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                        <input type="number" name="marks_{{ item.student_id }}" 
+                                               value="{{ item.marks_obtained|default:'' }}" 
+                                               max="{{ exam.max_marks }}" min="0"
+                                               class="form-input block w-full max-w-xs rounded-md py-1.5 text-sm dark:text-gray-100">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 flex items-center justify-end gap-x-6">
+            <a href="{% url 'exams' %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-green-500/30 transition-all duration-200 transform hover:bg-green-500 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-0.5">
+                Save All Results
+            </button>
+        </div>
+    </form>
+
+{% endblock %}

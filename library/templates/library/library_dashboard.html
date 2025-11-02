@@ -1,0 +1,135 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Library Management{% endblock %}
+
+{% block content %}
+
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Library Dashboard</h1>
+            <p class="mt-1 text-lg text-gray-600">Issue new books and manage current checkouts.</p>
+        </div>
+        <div class="flex-shrink-0">
+            <a href="{% url 'book_list' %}" class="flex w-full items-center justify-center rounded-md bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all sm:w-auto">
+                Manage Book Collection
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        
+        <div class="lg:col-span-1">
+            <div class="rounded-lg bg-white p-6 shadow-md">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900">Issue a Book</h3>
+                <form method="POST" class="mt-6 space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label for="{{ form.student_id.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.student_id.label }}</label>
+                        <div class="mt-2">
+                            {{ form.student_id }}
+                        </div>
+                        {% for error in form.student_id.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.book.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.book.label }}</label>
+                        <div class="mt-2">
+                            {{ form.book }}
+                        </div>
+                         {% for error in form.book.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.due_date.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.due_date.label }}</label>
+                        <div class="mt-2">
+                            {{ form.due_date }}
+                        </div>
+                         {% for error in form.due_date.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    {{ form.student }} <div class="border-t border-gray-200 pt-6">
+                        <button type="submit" class="flex w-full justify-center rounded-md bg-primary-600 py-2.5 px-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-all">
+                            Issue Book
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="flow-root">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900 mb-6">Currently Issued Books</h3>
+                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow-md ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Book Title</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Student</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Due Date</th>
+                                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                            <span class="sr-only">Actions</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    {% for issue in issued_books %}
+                                    <tr class="transition-colors hover:bg-gray-50">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ issue.book.title }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {{ issue.student.user.get_full_name }}
+                                            <span class="font-mono text-xs">({{ issue.student.student_id }})</span>
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm font-medium {% if issue.due_date < today %}text-red-600{% else %}text-gray-500{% endif %}">
+                                            {{ issue.due_date }}
+                                        </td>
+                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                            <form action="{% url 'return_book' issue.pk %}" method="POST" class="inline" onsubmit="return confirm('Mark this book as returned?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="font-medium text-green-600 hover:text-green-800">Mark as Returned</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="whitespace-nowrap px-3 py-12 text-center text-sm text-gray-500">
+                                            <h3 class="text-lg font-semibold text-gray-900">No Books Issued</h3>
+                                            <p class="mt-1 text-gray-500">All books are currently in the library.</p>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    /* Style the select2/django-autocomplete-light widget if you use it */
+    .form-input, .select2-container .select2-selection--single {
+         @apply block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6;
+         height: calc(2.5rem + 2px); /* Match height */
+         padding-top: 0.5rem;
+         padding-bottom: 0.5rem;
+    }
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        line-height: 1.5rem;
+        padding-left: 0.75rem;
+    }
+    .select2-container .select2-selection--single .select2-selection__arrow {
+        height: calc(2.5rem);
+    }
+</style>
+{% endblock %}

@@ -1,82 +1,134 @@
-{% extends "core/base.html" %}
+{% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Timetable{% endblock %}
-{% block page_title %}Timetable{% endblock %}
 
 {% block content %}
-<div class="bg-card p-6 rounded-2xl shadow-lg border border-border mb-6 animate-fade-in-up">
-  <form method="GET" action="{% url 'timetable:timetable' %}">
-    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex flex-wrap gap-3">
-        <select name="department" class="form-select py-2 px-4 rounded-lg">
-          <option value="">Select Department</option>
-          {% for dept in departments %}
-          <option value="{{ dept.id }}" {% if dept_query == dept.id|stringformat:"s" %}selected{% endif %}>
-            {{ dept.name }}
-          </option>
-          {% endfor %}
-        </select>
-        <select name="year" class="form-select py-2 px-4 rounded-lg">
-          <option value="">Select Year</option>
-          <option value="1" {% if year_query == '1' %}selected{% endif %}>Year 1</option>
-          <option value="2" {% if year_query == '2' %}selected{% endif %}>Year 2</option>
-          <option value="3" {% if year_query == '3' %}selected{% endif %}>Year 3</option>
-          <option value="4" {% if year_query == '4' %}selected{% endif %}>Year 4</option>
-        </select>
-        <select name="semester" class="form-select py-2 px-4 rounded-lg">
-          <option value="">Select Semester</option>
-          <option value="1" {% if sem_query == '1' %}selected{% endif %}>Sem 1</option>
-          <option value="2" {% if sem_query == '2' %}selected{% endif %}>Sem 2</option>
-        </select>
-        <button type="submit" class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
-          <i data-lucide="filter" class="w-4 h-4"></i> Filter
-        </button>
-      </div>
-      
-      {% if user.role == 'admin' or user.role == 'faculty' %}
-      <div class="flex gap-3">
-        <button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium">
-          <i data-lucide="plus" class="w-4 h-4"></i> Add Timetable Entry
-        </button>
-      </div>
-      {% endif %}
-      
-    </div>
-  </form>
-</div>
 
-<div class="bg-card rounded-2xl shadow-lg border border-border overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
-  <div class="p-4 border-b border-border">
-    <h3 class="text-lg font-semibold text-foreground">Weekly Timetable</h3>
-    <p class="text-sm text-muted-foreground">
-      Department: {{ selected_dept_name }}, Year: {{ year_query }}, Semester: {{ sem_query }}
-    </p> 
-  </div>
-  
-  <div class="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-border"> 
-    
-    {% for day_name, entries in timetable_data.items %}
-      <div class="flex-1">
-        <div class="bg-muted p-3 font-semibold text-center text-sm text-foreground border-b border-border">
-          {{ day_name }}
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between animate-fade-in-up">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Academic Timetable</h1>
+            <p class="mt-1 text-lg text-gray-600">View and manage class schedules.</p>
         </div>
-        <div class="p-3 space-y-3 min-h-[200px]">
-          
-          {% for entry in entries %}
-          <div class="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 p-3 rounded-lg text-xs shadow-sm stagger-animation">
-            <p class="font-bold text-blue-800 dark:text-blue-300">{{ entry.start_time|time:"H:i" }} - {{ entry.end_time|time:"H:i" }}</p>
-            <p class="font-semibold text-blue-700 dark:text-blue-400 my-1">{{ entry.course.course_code }} - {{ entry.course.name }}</p>
-            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i>Room: {{ entry.room }}</p>
-            <p class="text-blue-600 dark:text-blue-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i>{{ entry.faculty.user.first_name|default:'' }} {{ entry.faculty.user.last_name|default:'' }}</p>
-          </div>
-          {% empty %}
-          <p class="text-xs text-muted-foreground text-center pt-4">No classes scheduled.</p>
-          {% endfor %}
-          
+        {% if user.role == 'admin' %}
+        <div class="flex-shrink-0">
+            <a href="{% url 'add_timetable_slot' %}" class="btn-primary flex w-full items-center justify-center sm:w-auto">
+                <svg class="-ml-0.5 mr-1.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>
+                Add Timetable Slot
+            </a>
         </div>
-      </div>
-    {% endfor %}
-    
-  </div>
-</div>
-{% endblock %}
+        {% endif %}
+    </div>
+
+    <div class="berserk-card mb-8 p-5 animate-fade-in-up delay-100">
+        <form method="GET" action="{% url 'timetable' %}">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                
+                <div>
+                    <label for="department" class="block text-sm font-medium leading-6 text-gray-900">Department</label>
+                    <div class="mt-2">
+                        <select id="department" name="department" class="form-select">
+                            <option value="">Select Department...</option>
+                            {% for dept in departments %}
+                                <option value="{{ dept.id }}" {% if selected_dept_id == dept.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ dept.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="year" class="block text-sm font-medium leading-6 text-gray-900">Year</label>
+                    <div class="mt-2">
+                        <select id="year" name="year" class="form-select">
+                            <option value="1" {% if selected_year == '1' %}selected{% endif %}>1st Year</option>
+                            <option value="2" {% if selected_year == '2' %}selected{% endif %}>2nd Year</option>
+                            <option value="3" {% if selected_year == '3' %}selected{% endif %}>3rd Year</option>
+                            <option value="4" {% if selected_year == '4' %}selected{% endif %}>4th Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="semester" class="block text-sm font-medium leading-6 text-gray-900">Semester</label>
+                    <div class="mt-2">
+                        <select id="semester" name="semester" class="form-select">
+                            {% for i in "12345678"|make_list %}
+                            <option value="{{ i }}" {% if selected_semester == i %}selected{% endif %}>Semester {{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex items-center justify-end gap-x-3">
+                <a href="{% url 'timetable' %}" class="btn-secondary">Clear</a>
+                <button type="submit" class="btn-primary">View Timetable</button>
+            </div>
+        </form>
+    </div>
+
+    {% if not selected_dept_id %}
+    <div class="berserk-card text-center p-12 animate-fade-in-up delay-200">
+        <h3 class="text-lg font-semibold text-gray-900">Select a Department</h3>
+        <p class="mt-1 text-gray-500">Please select a department, year, and semester to view the timetable.</p>
+    </div>
+    {% elif not timetable_grid %}
+    <div class="berserk-card text-center p-12 animate-fade-in-up delay-200">
+        <h3 class="text-lg font-semibold text-gray-900">No Timetable Found</h3>
+        <p class="mt-1 text-gray-500">No timetable slots were found for the selected department, year, and semester.</p>
+    </div>
+    {% else %}
+    <div class="flow-root animate-fade-in-up delay-200">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div class="overflow-hidden shadow-xl ring-1 ring-black ring-opacity-5 rounded-2xl">
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 w-32">Time</th>
+                                {% for day_code, day_name in days %}
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{ day_name }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            {% for time, day_slots in timetable_grid.items %}
+                            <tr class="berserk-table-row">
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ time }}</td>
+                                
+                                {% for day_code, day_name in days %}
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 align-top">
+                                    {% with slot=day_slots|get_item:day_code %}
+                                    {% if slot %}
+                                        <div class="font-semibold text-primary-700">{{ slot.course.code }}</div>
+                                        <div class="text-gray-900">{{ slot.course.title }}</div>
+                                        <div class="text-xs text-gray-500">{{ slot.faculty.user.first_name }} {{ slot.faculty.user.last_name }}</div>
+                                        <div class="text-xs text-gray-500">Room: {{ slot.room_number }}</div>
+                                        {% if user.role == 'admin' %}
+                                        <div class="mt-2">
+                                            <a href="{% url 'edit_timetable_slot' slot.pk %}" class="text-xs text-primary-600 hover:text-primary-800">Edit</a>
+                                            <form action="{% url 'delete_timetable_slot' slot.pk %}" method="POST" class="inline" onsubmit="return confirm('Are you sure?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="ml-2 text-xs text-red-600 hover:text-red-800">Delete</button>
+                                            </form>
+                                        </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-gray-300">--</span>
+                                    {% endif %}
+                                    {% endwith %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock content %}

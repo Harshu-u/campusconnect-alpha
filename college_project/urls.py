@@ -6,14 +6,24 @@ from core import views as core_views # Import core views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/register/', core_views.register_view, name='register'),
+    
+    # --- FIXES ---
+    # 1. Use our custom register view, named 'register'
+    path('accounts/register/', core_views.register, name='register'),
+    
+    # 2. Use our custom logout view
+    path('accounts/logout/', core_views.custom_logout, name='logout'),
+    
+    # 3. Include the rest of the default auth URLs (for login, password reset, etc.)
     path('accounts/', include('django.contrib.auth.urls')), 
     
-    # 3. Include URLs from all your new apps
+    # --- END FIXES ---
+    
+    # Include URLs from all your apps
     path('students/', include('students.urls')),
     path('faculty/', include('faculty.urls')),
-    path('courses/', include('courses.urls')),       # <-- This is now correct
-    path('timetable/', include('timetable.urls')),  # <-- ADD THIS
+    path('courses/', include('courses.urls')),
+    path('timetable/', include('timetable.urls')),
     path('attendance/', include('attendance.urls')),
     path('exams/', include('exams.urls')),
     path('library/', include('library.urls')),
@@ -21,6 +31,7 @@ urlpatterns = [
     path('hostel/', include('hostel_transport.urls')),
     path('sports/', include('sports.urls')),
 
+    # Core URLs (landing page, dashboard)
     path('', include('core.urls')), 
 ]
 

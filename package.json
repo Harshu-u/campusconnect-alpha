@@ -1,0 +1,25 @@
+{
+  "name": "campusconnect-berserk",
+  "version": "1.0.0",
+  "description": "Project Berserk Arc - Total Frontend Annihilation",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify",
+    "watch:css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch",
+    "dev": "concurrently \"python manage.py runserver_plus 127.0.0.1:8000 --cert-file devcert.pem --key-file devkey.pem\" \"npm run watch:css\""
+  },
+  "keywords": [
+    "django",
+    "tailwind",
+    "berserk"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
+  }
+}

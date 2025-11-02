@@ -1,19 +1,19 @@
-# --- File: faculty/urls.py ---
-# This is the full and correct file (FIXED)
-
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Path for the main faculty list view
+    # /faculty/
     path('', views.faculty_view, name='faculty'),
     
-    # Path for adding a new faculty member
+    # /faculty/add/
     path('add/', views.add_faculty_view, name='add_faculty'),
     
-    # Path for editing an existing faculty member (e.g., /faculty/edit/5/)
+    # /faculty/edit/1/
     path('edit/<int:pk>/', views.edit_faculty_view, name='edit_faculty'),
     
-    # Path for deleting a faculty member (e.g., /faculty/delete/5/)
+    # /faculty/delete/1/
     path('delete/<int:pk>/', views.delete_faculty_view, name='delete_faculty'),
+    
+    # /faculty/import/
+    path('import/', views.import_faculty_csv, name='import_faculty'),
 ]

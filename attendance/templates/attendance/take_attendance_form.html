@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Take Attendance{% endblock %}
+
+{% block content %}
+
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Take Attendance</h1>
+        <p class="mt-1 text-lg text-gray-600">Select a course and date to load the class list.</p>
+    </div>
+
+    <div class="rounded-lg bg-white shadow-md mb-8">
+        <form method="POST" class="p-5">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                
+                <div>
+                    <label for="{{ form.course.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">Course</label>
+                    <div class="mt-2">
+                        {{ form.course }}
+                    </div>
+                    {% for error in form.course.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <label for="{{ form.date.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">Date</label>
+                    <div class="mt-2">
+                        {{ form.date }}
+                    </div>
+                    {% for error in form.date.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="mt-4 flex items-center justify-end">
+                <button type="submit" name="load_students" class="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 transition-all">
+                    Load Students
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    {% if students %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="course" value="{{ course.id }}">
+        <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+        
+        <h2 class="text-2xl font-semibold text-gray-900">Class List for {{ course.title }} on {{ date }}</h2>
+        
+        <div class="mt-6 flow-root">
+            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <div class="overflow-hidden shadow-md ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Student ID</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                {% for student in students %}
+                                <tr class="transition-colors hover:bg-gray-50">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-mono text-gray-500 sm:pl-6">{{ student.student_id }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
+                                        {{ student.user.first_name }} {{ student.user.last_name }}
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                        <fieldset>
+                                            <legend class="sr-only">Attendance for {{ student.user.get_full_name }}</legend>
+                                            <div class="flex items-center space-x-4">
+                                                {% for value, label in form.fields.status.choices %}
+                                                <div class="flex items-center">
+                                                    <input id="status_{{ student.id }}_{{ value }}" name="status_{{ student.id }}" type="radio" value="{{ value }}" 
+                                                           class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-600" 
+                                                           {% if value == 'present' %}checked{% endif %}>
+                                                    <label for="status_{{ student.id }}_{{ value }}" class="ml-2 block text-sm font-medium text-gray-900">{{ label }}</label>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-end">
+            <button type="submit" name="save_attendance" class="rounded-md bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transition-all">
+                Save Attendance
+            </button>
+        </div>
+    </form>
+    {% endif %}
+
+<style>
+    /* Add default styling to all form inputs/selects */
+    .form-input {
+         @apply block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6;
+    }
+</style>
+{% endblock %}

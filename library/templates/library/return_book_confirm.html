@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Confirm Book Return{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-lg rounded-lg bg-white p-8 shadow-md">
+    <h1 class="text-2xl font-bold tracking-tight text-gray-900">Confirm Book Return</h1>
+    
+    <p class="mt-4 text-gray-600">Are you sure you want to mark the following book as returned?</p>
+
+    <div class="mt-6 border-t border-b border-gray-200 py-6">
+        <dl class="grid grid-cols-2 gap-x-4 gap-y-6">
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">Book Title</dt>
+                <dd class="mt-1 text-sm text-gray-900 font-semibold">{{ issue.book.title }}</dd>
+            </div>
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">ISBN</dt>
+                <dd class="mt-1 text-sm text-gray-900 font-mono">{{ issue.book.isbn }}</dd>
+            </div>
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">Student</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ issue.student.user.get_full_name }} ({{ issue.student.student_id }})</dd>
+            </div>
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">Due Date</dt>
+                <dd class="mt-1 text-sm text-gray-900 {% if issue.due_date < today %}font-bold text-red-600{% endif %}">{{ issue.due_date }}</dd>
+            </div>
+        </dl>
+    </div>
+
+    <form method="POST" action="{% url 'return_book' issue.pk %}" class="mt-6">
+        {% csrf_token %}
+        <div class="flex items-center justify-end gap-x-6">
+            <a href="{% url 'library' %}" class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
+            <button type="submit" class="rounded-md bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 transition-all">
+                Confirm Return
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

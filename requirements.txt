@@ -9,3 +9,7 @@ pyOpenSSL
 werkzeug
 cryptography
 django-cleanup
+
+# --- BERSERK ARC ADDITIONS ---
+Faker==25.8.0
+django-filter==24.2

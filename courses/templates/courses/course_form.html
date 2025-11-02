@@ -1,51 +1,120 @@
 {% extends "core/base.html" %}
 
-{% block title %}{{ form_title|default:"Course Form" }}{% endblock %}
+{% block title %}{{ form_title }}{% endblock %}
 
-{% block page_title %}{{ form_title|default:"Course Form" }}{% endblock %}
+{% block page_title %}{{ form_title }}{% endblock %}
 
 {% block content %}
-<div class="bg-card p-6 md:p-8 rounded-2xl shadow-lg border border-border max-w-4xl mx-auto animate-fade-in-up">
-  <form method="post">
-    {% csrf_token %}
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-          <div class="md:col-span-2 bg-destructive/10 text-destructive text-sm p-3 rounded-lg">{{ error }}</div>
-        {% endfor %}
-      {% endif %}
 
-      {% for field in form %}
-        <div class="space-y-2 
-          {% if field.name == 'description' %} 
-            md:col-span-2 
-          {% endif %}
-        ">
-          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-foreground mb-1">{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}
-            <p class="text-xs text-muted-foreground mt-1">{{ field.help_text }}</p>
-          {% endif %}
-          {% for error in field.errors %}
-            <div class="text-destructive text-xs mt-1">{{ error }}</div>
-          {% endfor %}
-        </div>
-      {% endfor %}
+<div class="bg-card p-6 md:p-8 rounded-2xl shadow-lg border border-border max-w-4xl mx-auto animate-fade-in-up">
+  <form method="POST" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg mb-6" role="alert">
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.name.id_for_label }}" class="text-sm font-medium text-muted-foreground">Course Name</label>
+        {{ form.name }}
+        {% if form.name.errors %}<p class="text-sm text-destructive">{{ form.name.errors.as_text }}</p>{% endif %}
+      </div>
+      
+      <div class="space-y-2">
+        <label for="{{ form.course_code.id_for_label }}" class="text-sm font-medium text-muted-foreground">Course Code</label>
+        {{ form.course_code }}
+        {% if form.course_code.errors %}<p class="text-sm text-destructive">{{ form.course_code.errors.as_text }}</p>{% endif %}
+      </div>
+      
+      <div class="space-y-2">
+        <label for="{{ form.department.id_for_label }}" class="text-sm font-medium text-muted-foreground">Department</label>
+        {{ form.department }}
+        {% if form.department.errors %}<p class="text-sm text-destructive">{{ form.department.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2">
+        <label for="{{ form.year.id_for_label }}" class="text-sm font-medium text-muted-foreground">Year</label>
+        {{ form.year }}
+        {% if form.year.errors %}<p class="text-sm text-destructive">{{ form.year.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2">
+        <label for="{{ form.semester.id_for_label }}" class="text-sm font-medium text-muted-foreground">Semester</label>
+        {{ form.semester }}
+        {% if form.semester.errors %}<p class="text-sm text-destructive">{{ form.semester.errors.as_text }}</p>{% endif %}
+      </div>
+      
+      <div class="space-y-2">
+        <label for="{{ form.credits.id_for_label }}" class="text-sm font-medium text-muted-foreground">Credits</label>
+        {{ form.credits }}
+        {% if form.credits.errors %}<p class="text-sm text-destructive">{{ form.credits.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2">
+        <label for="{{ form.course_type.id_for_label }}" class="text-sm font-medium text-muted-foreground">Course Type</label>
+        {{ form.course_type }}
+        {% if form.course_type.errors %}<p class="text-sm text-destructive">{{ form.course_type.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2">
+        <label for="{{ form.lecture_hours.id_for_label }}" class="text-sm font-medium text-muted-foreground">Lecture Hours</label>
+        {{ form.lecture_hours }}
+        {% if form.lecture_hours.errors %}<p class="text-sm text-destructive">{{ form.lecture_hours.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2">
+        <label for="{{ form.tutorial_hours.id_for_label }}" class="text-sm font-medium text-muted-foreground">Tutorial Hours</label>
+        {{ form.tutorial_hours }}
+        {% if form.tutorial_hours.errors %}<p class="text-sm text-destructive">{{ form.tutorial_hours.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2">
+        <label for="{{ form.practical_hours.id_for_label }}" class="text-sm font-medium text-muted-foreground">Practical Hours</label>
+        {{ form.practical_hours }}
+        {% if form.practical_hours.errors %}<p class="text-sm text-destructive">{{ form.practical_hours.errors.as_text }}</p>{% endif %}
+      </div>
+      
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.description.id_for_label }}" class="text-sm font-medium text-muted-foreground">Description (Optional)</label>
+        {{ form.description }}
+        {% if form.description.errors %}<p class="text-sm text-destructive">{{ form.description.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.reference_books.id_for_label }}" class="text-sm font-medium text-muted-foreground">Reference Books (Optional)</label>
+        {{ form.reference_books }}
+        {% if form.reference_books.errors %}<p class="text-sm text-destructive">{{ form.reference_books.errors.as_text }}</p>{% endif %}
+      </div>
+      
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.syllabus.id_for_label }}" class="text-sm font-medium text-muted-foreground">Syllabus (Optional)</label>
+        {{ form.syllabus }}
+        {% if form.syllabus.errors %}<p class="text-sm text-destructive">{{ form.syllabus.errors.as_text }}</p>{% endif %}
+      </div>
+
+      <div class="space-y-2 md:col-span-2 flex items-center gap-3">
+        {{ form.is_active }}
+        <label for="{{ form.is_active.id_for_label }}" class="text-sm font-medium text-muted-foreground">This course is currently active</label>
+        {% if form.is_active.errors %}<p class="text-sm text-destructive">{{ form.is_active.errors.as_text }}</p>{% endif %}
+      </div>
+
     </div>
 
-    <div class="mt-8 pt-6 border-t border-border flex items-center gap-4">
-      <button 
-        type="submit" 
-        class="btn-primary flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-medium"
-      >
-        <i data-lucide="save" class="w-4 h-4"></i>
-        Save Course
-      </button>
-      <a href="{% url 'courses:courses' %}" class="text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:underline">
+    <div class="flex items-center justify-end gap-4 mt-8 pt-6 border-t border-border">
+      <a href="{% url 'courses:courses' %}" class="btn-secondary px-5 py-2.5 rounded-lg text-sm">
         Cancel
       </a>
+      <button type="submit" class="btn-primary px-5 py-2.5 rounded-lg text-sm">
+        Save Course
+      </button>
     </div>
   </form>
 </div>
+
 {% endblock %}

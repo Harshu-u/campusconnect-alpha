@@ -1,68 +1,103 @@
+# --- File: faculty/forms.py ---
+# This is the full and correct file (FIXED)
+
 from django import forms
-from .models import Faculty
+from django.db import transaction
+from django.contrib.auth.hashers import make_password
 from core.models import User
-from students.models import Department
+from .models import Faculty, Department
 
 class FacultyForm(forms.ModelForm):
+    # User fields
+    first_name = forms.CharField(max_length=100, required=True)
+    last_name = forms.CharField(max_length=100, required=True)
+    email = forms.EmailField(required=True)
     
-    # Define common CSS classes for all form widgets
-    FORM_INPUT_CLASSES = 'form-input w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
-    FORM_SELECT_CLASSES = 'form-select w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
-    FORM_DATE_CLASSES = 'form-date w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
-
-    def __init__(self, *args, **kwargs):
-        """
-        Filters the 'user' queryset to only show users with the 'faculty'
-        role who do not already have a faculty_profile.
-        """
-        super().__init__(*args, **kwargs)
-        
-        # Per Task 1.C: Filter users
-        self.fields['user'].queryset = User.objects.filter(
-            role='faculty', 
-            faculty_profile__isnull=True
-        )
-        
-        # Apply Tailwind classes to all fields
-        for field_name, field in self.fields.items():
-            if isinstance(field.widget, forms.DateInput):
-                 field.widget.attrs.update({'class': self.FORM_DATE_CLASSES})
-            elif isinstance(field.widget, forms.Select):
-                 field.widget.attrs.update({'class': self.FORM_SELECT_CLASSES})
-            else:
-                 field.widget.attrs.update({'class': self.FORM_INPUT_CLASSES})
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=True)
 
     class Meta:
         model = Faculty
-        # We include all fields Admin needs to fill out
         fields = [
-            'user',
-            'employee_id',
-            'department',
-            'designation',
-            'employment_type',
-            'phone',
-            'alternate_phone',
-            'personal_email',
-            'address',
-            'city',
-            'state',
-            'postal_code',
-            'qualification',
-            'specialization',
-            'research_interests',
-            'total_experience',
-            'industry_experience',
-            'teaching_experience',
-            'joining_date',
-            'contract_end_date',
-            'salary',
-            'bank_account',
-            'pan_number',
-            'status',
-            'is_hod'
+            'employee_id', 'designation', 'phone', 'alternate_phone', 
+            'personal_email', 'address', 'qualification', 'specialization', 
+            'joining_date', 'salary', 'status', 'employment_type',
         ]
-        # Add a date picker widget for joining_date
         widgets = {
             'joining_date': forms.DateInput(attrs={'type': 'date'}),
+            'address': forms.Textarea(attrs={'rows': 3}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # If this is an existing instance, populate the User fields
+        if self.instance and self.instance.pk:
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['email'].initial = self.instance.user.email
+            self.fields['department'].initial = self.instance.department
+            
+            # Make User fields read-only during edit
+            self.fields['email'].disabled = True
+            self.fields['employee_id'].disabled = True # Cannot change employee ID
+        
+        # Apply Tailwind classes to all fields
+        for field_name, field in self.fields.items():
+            # Apply default classes
+            if isinstance(field.widget, forms.Textarea):
+                field.widget.attrs['class'] = 'form-textarea'
+            elif isinstance(field.widget, forms.Select):
+                field.widget.attrs['class'] = 'form-select'
+            elif isinstance(field.widget, forms.DateInput):
+                 field.widget.attrs['class'] = 'form-input dark:[color-scheme:dark]'
+            else:
+                field.widget.attrs['class'] = 'form-input'
+            
+            # Special handling for disabled fields
+            if field.disabled:
+                field.widget.attrs['class'] += ' bg-muted'
+                field.widget.attrs['readonly'] = True
+
+
+    @transaction.atomic
+    def save(self, commit=True):
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+        email = self.cleaned_data.get('email')
+        employee_id = self.cleaned_data.get('employee_id') # Changed from faculty_id
+        
+        if not self.instance.pk:
+            # --- This is a NEW faculty ---
+            try:
+                # Use employee_id as default username and password
+                user = User.objects.create(
+                    username=employee_id,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    role='faculty',
+                    password=make_password(employee_id)
+                )
+            except IntegrityError as e:
+                if 'username' in str(e):
+                    self.add_error('employee_id', "A user with this Employee ID already exists.")
+                elif 'email' in str(e):
+                    self.add_error('email', "A user with this email already exists.")
+                else:
+                    self.add_error(None, f"Could not create user: {e}")
+                return None
+            except Exception as e:
+                self.add_error(None, f"Could not create user: {e}")
+                return None 
+
+            self.instance.user = user
+        else:
+            # --- This is an EXISTING faculty ---
+            user = self.instance.user
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+
+        faculty_profile = super().save(commit)
+        
+        return faculty_profile

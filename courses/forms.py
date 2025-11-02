@@ -1,39 +1,43 @@
 # --- File: courses/forms.py ---
-# This is a new file.
+# This is the full and correct file (FIXED)
 
 from django import forms
-from .models import Course, CourseAssignment
+from .models import Course
 from students.models import Department
 from faculty.models import Faculty
 
 class CourseForm(forms.ModelForm):
-    
-    # Define common CSS classes for all form widgets
-    FORM_INPUT_CLASSES = 'form-input w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
-    FORM_SELECT_CLASSES = 'form-select w-full px-4 py-2 rounded-lg border border-input bg-background text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary'
+    # Department is still a simple selection
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=True)
+
+    class Meta:
+        model = Course
+        # --- FIXED: Matched all fields to your courses/models.py ---
+        fields = [
+            'name', 'course_code', 'department', 
+            'year', 'semester', 'credits', 'description', 'is_active',
+            'course_type', 'lecture_hours', 'tutorial_hours', 'practical_hours',
+            'syllabus', 'reference_books'
+        ]
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'reference_books': forms.Textarea(attrs={'rows': 3}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Apply Tailwind classes to all fields
+        # Style all fields with our new Tailwind classes
         for field_name, field in self.fields.items():
-            if isinstance(field.widget, forms.Select):
-                 field.widget.attrs.update({'class': self.FORM_SELECT_CLASSES})
+            if isinstance(field.widget, forms.Textarea):
+                field.widget.attrs['class'] = 'form-textarea'
+            elif isinstance(field.widget, forms.Select):
+                field.widget.attrs['class'] = 'form-select'
+            elif isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs['class'] = 'form-checkbox h-5 w-5 rounded'
+            elif isinstance(field.widget, forms.FileInput):
+                field.widget.attrs['class'] = 'form-input' # Basic styling for file input
             else:
-                 field.widget.attrs.update({'class': self.FORM_INPUT_CLASSES})
+                field.widget.attrs['class'] = 'form-input'
 
-    class Meta:
-        model = Course
-        fields = [
-            'department', 
-            'course_code', 
-            'name', 
-            'description', 
-            'credits', 
-            'semester', 
-            'year', 
-            'is_active'
-        ]
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 3}),
-        }
+        # --- FIXED: Removed the faculty field logic ---

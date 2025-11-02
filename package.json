@@ -1,0 +1,29 @@
+{
+  "name": "campusconnect-alpha",
+  "version": "2.0.0",
+  "description": "Berserk Arc Overhaul of CampusConnect",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify",
+    "watch": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch",
+    "dev": "concurrently \"npm run watch\" \"python manage.py runserver\""
+  },
+  "keywords": [
+    "django",
+    "tailwindcss",
+    "alpinejs"
+  ],
+  "author": "hps",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4"
+  },
+  "dependencies": {
+    "alpinejs": "^3.15.1",
+    "lucide": "^0.552.0"
+  }
+}

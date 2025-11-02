@@ -10,11 +10,15 @@ venv/
 db.sqlite3
 media/
 /staticfiles/
-
-# Local dev HTTPS certs created by mkcert
+node_modules/
+migrations/
+dev.crt
 devcert.pem
 devkey.pem
 devcombined.pem
+docs/
+logs/
+# Local dev HTTPS certs created by mkcert
 
 # idea/vscode
 .vscode/
